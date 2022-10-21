@@ -1,5 +1,5 @@
-#ifndef Client_CLASS_H
-# define Client_CLASS_H
+#ifndef CLIENT_CLASS_H
+# define CLIENT_CLASS_H
 
 #include <iostream>
 #include <vector>

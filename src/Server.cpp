@@ -6,11 +6,11 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 15:42:07 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:22:10 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ft_irc.hpp>
+#include "ft_irc.hpp"
 
 #define TRUE 1
 #define FALSE 0

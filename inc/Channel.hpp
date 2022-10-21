@@ -1,5 +1,5 @@
-#ifndef Channel_CLASS_H
-# define Channel_CLASS_H
+#ifndef CHANNEL_CLASS_H
+# define CHANNEL_CLASS_H
 
 #include <vector>
 

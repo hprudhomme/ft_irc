@@ -6,12 +6,12 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:48:59 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 15:41:49 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:22:00 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
-#include "Server.hpp"
+#include "ft_irc.hpp"
 
 int main()
 {

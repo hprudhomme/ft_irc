@@ -1,4 +1,4 @@
-#include <ft_irc.hpp>
+#include "ft_irc.hpp"
 
 Channel::Channel(std::string const &name, Client *admin, Server *server)
 					: _name(name), _admin(admin), _server(server) {}

@@ -1,4 +1,4 @@
-#include <ft_irc.hpp>
+#include "ft_irc.hpp"
 #include "rpl.hpp"
 
 Client::Client(int fd, std::string const &hostname, int port)
