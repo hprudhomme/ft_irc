@@ -1,4 +1,5 @@
 #include "ft_irc.hpp"
+#include "rpl.hpp"
 
 Channel::Channel(std::string const &name, Client *admin, Server *server)
 					: _name(name), _admin(admin), _server(server) {}
@@ -43,6 +44,17 @@ void Channel::removeClient(Client *client)
 void Channel::removeOper(Client *client)
 {
 	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
+}
+
+void Channel::kick(Client *client, Client *target, std::string const &reason)
+{
+	_server->broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
+	removeClient(target);
+
+	// test
+	char message[100];
+	sprintf(message, "%s kicked %s from channel %s.", client->getNickName().c_str(), target->getNickName().c_str(),
+			_name.c_str());
 }
 
 

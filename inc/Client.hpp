@@ -46,9 +46,10 @@ class Client
 
 		void 					write(const std::string &message) const;
 		void 					reply(const std::string &reply);
+		std::string 			getPrefix() const;
 		void 					welcome();
-		void					join(Channel *chan);
-		void					leave(Channel *chan);
+		void					join(Channel *chan) { _user_chans.push_back(chan); };
+		void					leave(Channel *chan) { _user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end()); };
 };
 
 #endif

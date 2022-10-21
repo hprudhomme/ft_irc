@@ -5,17 +5,20 @@ Client::Client(int fd, std::string const &hostname, int port)
 					: _fd(fd), _hostname(hostname), _port(port) {}
 Client::~Client() {}
 
-void Client::write(const std::string &message) const {
-
-	//std::cout << "-> " << message << std::endl;
-
+void Client::write(const std::string &message) const
+{
 	std::string buffer = message + "\r\n";
 	if (send(_fd, buffer.c_str(), buffer.length(), 0) < 0)
 		throw std::runtime_error("Error while sending message to client.");
 }
 
+std::string Client::getPrefix() const
+{
+	return _nickname + (_username.empty() ? "" : "!" + _username) + (_hostname.empty() ? "" : "@" + _hostname);
+}
+
 void Client::reply(const std::string &reply) {
-	write(":" + reply);
+	write(":" + getPrefix() + " " + reply);
 }
 
 void	Client::join(Channel *chan)
