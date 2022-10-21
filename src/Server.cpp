@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 16:22:10 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:33:49 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,25 +46,22 @@ void	Server::listen(void)
 	if(this->_server_socket == 0)
 	{
 		std::cout << "Error: Socket creation failed." << std::endl;
-		exit(EXIT_FAILURE);
+		return;
 	}
-
-	//fcntl(this->_server_socket, F_SETFL, O_NONBLOCK);
 
 	//set master socket to allow multiple connections
 	if(setsockopt(this->_server_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0)
 	{
 		std::cout << "Error: Can't set socket options." << std::endl;
-		exit(EXIT_FAILURE);
+		return;
 	}
 
 	// Set socket to be nonblocking. (clients sockets will inherit)
-	int rc = ioctl(this->_server_socket, FIONBIO, (char *)&opt);
-	if (rc < 0)
+	if (fcntl(this->_server_socket, F_SETFL, O_NONBLOCK) < 0)
 	{
-		perror("ioctl() failed");
+		std::cout << "Error: Can't set socket to non-blocking." << std::endl;
 		close(this->_server_socket);
-		exit(-1);
+		return;
 	}
 
 	//type of socket created
@@ -79,7 +76,7 @@ void	Server::listen(void)
 	{
 		std::cout << "Error: Can't bind socket." << std::endl;
 		close(this->_server_socket);
-		exit(EXIT_FAILURE);
+		return;
 	}
 
 	std::cout << "Starting ft_irc on port " << ntohs(address.sin_port) << std::endl;
@@ -88,7 +85,7 @@ void	Server::listen(void)
 	if (::listen(this->_server_socket, 32) < 0)
 	{
 		std::cout << "Error: Can't listen on socket." << std::endl;
-		exit(EXIT_FAILURE);
+		return;
 	}
 
 	std::cout << "Waiting for connections ..." << std::endl;
@@ -107,9 +104,7 @@ void	Server::_waitActivity(void)
 	// wait for an activity in a socket
 	int rc = poll(this->_clients_fds, this->_clients.size() + 1, -1);
 	if (rc < 0)
-	{
-		perror("  poll() failed");
-	}
+		std::cout << "Error: Can't look for socket(s) activity." << std::endl;
 
 	// loop in every client socket for a connection
 	for(unsigned long i=0; i < this->_clients.size() + 1; i++)
@@ -128,7 +123,7 @@ void	Server::_waitActivity(void)
 				if (socket < 0)
 				{
 					if (errno != EWOULDBLOCK)
-						perror("  accept() failed");
+						std::cout << "Error: Failed to accept connection." << std::endl;
 					break;
 				}
 				this->send(this->_welcome_message, socket);
@@ -144,7 +139,7 @@ void	Server::_waitActivity(void)
 				{
 					if (errno != EWOULDBLOCK)
 					{
-						perror("  recv() failed");
+						std::cout << "Error: recv() failed for fd " << this->_clients_fds[i].fd;
 						close_conn = TRUE;
 					}
 					break;
@@ -152,7 +147,6 @@ void	Server::_waitActivity(void)
 
 				if (ret == 0)
 				{
-					std::cout << "  Connection closed" << std::endl;
 					close_conn = TRUE;
 					break;
 				}
@@ -184,7 +178,7 @@ void	Server::broadcast(std::string message) const
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		this->send(message, this->_clients[i]);
+		this->send(message, this->_clients[i].getFD());
 	}
 }
 
@@ -192,14 +186,14 @@ void	Server::broadcastExclude(std::string message, int exclude_fd) const
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i] != exclude_fd)
-			this->send(message, this->_clients[i]);
+		if (this->_clients[i].getFD() != exclude_fd)
+			this->send(message, this->_clients[i].getFD());
 	}
 }
 
 int	Server::addClient(int socket, std::string ip, int port)
 {
-	this->_clients.push_back(socket);
+	this->_clients.push_back(Client(socket, ip, port));
 	this->_constructFds();
 	std::cout << "* New connection {fd: " << socket
 		<< ", ip: " << ip
@@ -210,30 +204,22 @@ int	Server::addClient(int socket, std::string ip, int port)
 
 int	Server::delClient(int socket)
 {
-	// getpeername forbidden, will be removed when data from accept() will be stored in client class
-	struct sockaddr_in address;
-	int addrlen;
-	getpeername(socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-	std::string ip = inet_ntoa(address.sin_addr);
-	int port = ntohs(address.sin_port);
-	/////////////////////////////////////////////////////////////////////////////////////////////////
-
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i] == socket)
+		if (this->_clients[i].getFD() == socket)
 		{
 			close(socket);
-			this->_clients.erase(this->_clients.begin() + i);
 
+			std::cout << "* Closed connection {fd: " << this->_clients[i].getFD()
+				<< ", ip: " << this->_clients[i].getHostName()
+				<< ", port: " << this->_clients[i].getPort()
+				<< "}" << std::endl;
+
+			this->_clients.erase(this->_clients.begin() + i);
 			break;
 		}
 	}
 	this->_constructFds();
-
-	std::cout << "* Closed connection {fd: " << socket
-		<< ", ip: " << ip
-		<< ", port: " << port
-		<< "}" << std::endl;
 	return this->_clients.size();
 }
 
@@ -248,7 +234,7 @@ void	Server::_constructFds(void)
 
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		this->_clients_fds[i + 1].fd = this->_clients[i];
+		this->_clients_fds[i + 1].fd = this->_clients[i].getFD();
 		this->_clients_fds[i + 1].events = POLLIN;
 	}
 }

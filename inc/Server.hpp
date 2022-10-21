@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 15:42:15 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/21 16:23:39 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@
 # define DEFAULT_PORT 6697
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
 
+class Client;
+
 class Server {
 private:
 	const int			_port;
-	std::vector<int>	_clients;
+	std::vector<Client>	_clients;
 	std::string			_welcome_message;
 
 	int					_server_socket;
