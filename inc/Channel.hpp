@@ -1,9 +1,10 @@
-#pragma once
-
-#include "Client.hpp"
-#include "Server.hpp"
+#ifndef Channel_CLASS_H
+# define Channel_CLASS_H
 
 #include <vector>
+
+class Client;
+class Server;
 
 class Channel
 {
@@ -18,9 +19,9 @@ private:
 	std::vector<Client *> _clients;
 	std::vector<Client *> _oper_clients;
 
-	Server _server;
+	Server *_server;
 public:
-	Channel(std::string const &name, Client *admin, Server server);
+	Channel(std::string const &name, Client *admin, Server *server);
 	~Channel();
 
 	// GETTERS
@@ -48,3 +49,5 @@ public:
 
 	void						broadcast_channel(std::string const &message) const;
 };
+
+#endif

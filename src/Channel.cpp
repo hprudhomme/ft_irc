@@ -1,7 +1,7 @@
-#include "Channel.hpp"
+#include <ft_irc.hpp>
 
-Channel::Channel(std::string const &name, Client *admin, Server server)
-					: _name(name), _admin(admin) _server(server) {}
+Channel::Channel(std::string const &name, Client *admin, Server *server)
+					: _name(name), _admin(admin), _server(server) {}
 Channel::~Channel() {}
 
 std::vector<std::string>	Channel::getNickNames()
@@ -19,7 +19,7 @@ std::vector<std::string>	Channel::getNickNames()
 
 void						Channel::broadcast_channel(std::string const &message) const
 {
-	_server.broadcast(message);
+	_server->broadcast(message);
 }
 
 
