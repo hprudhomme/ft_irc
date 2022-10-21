@@ -16,6 +16,7 @@ class Client
 
 		std::vector<Channel *> _user_chans;
 
+		std::string	_command;
 	public:
 		Client(int fd, std::string const &hostname, int port);
 		~Client();

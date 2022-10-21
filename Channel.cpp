@@ -1,7 +1,7 @@
 #include "Channel.hpp"
 
 Channel::Channel(std::string const &name, Client *admin, Server server)
-					: _name(name), _admin(admin) _server(sever) {}
+					: _name(name), _admin(admin) _server(server) {}
 Channel::~Channel() {}
 
 std::vector<std::string>	Channel::getNickNames()
@@ -12,15 +12,14 @@ std::vector<std::string>	Channel::getNickNames()
 	while (it != _clients.end())
 	{
 		Client *client = it.operator*();
-		nicknames.push_back((_admin == client ? "@" : "") + (*it)->getNickname());
+		nicknames.push_back((_admin == client ? "@" : "") + (*it)->getNickName());
 	}
-
-
+	return nicknames;
 }
 
-void						Channel::broadcast_channel(std::string const &message, Server server) const
+void						Channel::broadcast_channel(std::string const &message) const
 {
-	server.broadcast(message);
+	_server.broadcast(message);
 }
 
 

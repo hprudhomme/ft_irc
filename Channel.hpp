@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client.hpp"
-#include "Server.cpp"
+#include "Server.hpp"
 
 #include <vector>
 
@@ -18,7 +18,7 @@ private:
 	std::vector<Client *> _clients;
 	std::vector<Client *> _oper_clients;
 
-	Server server;
+	Server _server;
 public:
 	Channel(std::string const &name, Client *admin, Server server);
 	~Channel();
