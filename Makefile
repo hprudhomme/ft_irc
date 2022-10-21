@@ -5,6 +5,7 @@ S		=	src
 SRC		=	$S/Server.cpp \
 			$S/Channel.cpp \
 			$S/Client.cpp \
+			$S/utils.cpp \
 			$S/main.cpp
 INCS	=	$I/Server.hpp \
 			$I/Channel.hpp \

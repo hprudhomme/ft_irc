@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 16:33:49 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/21 17:38:25 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ Server::~Server(void)
 
 void	Server::listen(void)
 {
-	struct sockaddr_in address;
+	struct sockaddr_in6 address;
 	int opt = 1;
 
 	//create a master socket
-	this->_server_socket = socket(AF_INET , SOCK_STREAM , 0);
+	this->_server_socket = socket(AF_INET6, SOCK_STREAM , IPPROTO_TCP);
 	if(this->_server_socket == 0)
 	{
 		std::cout << "Error: Socket creation failed." << std::endl;
@@ -65,12 +65,11 @@ void	Server::listen(void)
 	}
 
 	//type of socket created
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(this->_port);
-	// address.sin6_family = AF_INET6;
-	// address.sin6_addr.s_addr = INADDR_ANY;
-	// address.sin6_port = htons(this->_port);
+	const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
+	address.sin6_family = AF_INET6;
+	address.sin6_addr = in6addr_any;
+	address.sin6_port = htons(this->_port);
+
 
 	if (bind(this->_server_socket, (struct sockaddr *)&address, sizeof(address))<0)
 	{
@@ -79,7 +78,7 @@ void	Server::listen(void)
 		return;
 	}
 
-	std::cout << "Starting ft_irc on port " << ntohs(address.sin_port) << std::endl;
+	std::cout << "Starting ft_irc on port " << this->_port << std::endl;
 
 	// listen
 	if (::listen(this->_server_socket, 32) < 0)
@@ -116,7 +115,7 @@ void	Server::_waitActivity(void)
 		if (this->_clients_fds[i].fd == this->_server_socket)
 		{
 			do {
-				struct sockaddr_in address;
+				struct sockaddr_in6 address;
 				int addrlen;
 
 				socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
@@ -127,7 +126,7 @@ void	Server::_waitActivity(void)
 					break;
 				}
 				this->send(this->_welcome_message, socket);
-				this->addClient(socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
+				this->addClient(socket, ft_inet_ntop6(&address.sin6_addr), ntohs(address.sin6_port));
 			} while (socket != -1);
 		}
 		else
