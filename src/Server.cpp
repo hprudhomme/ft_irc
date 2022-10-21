@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include <ft_irc.hpp>
 
 #define TRUE 1
 #define FALSE 0

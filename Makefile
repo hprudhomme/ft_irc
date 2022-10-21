@@ -7,8 +7,8 @@ SRC		=	$S/Server.cpp \
 			$S/Client.cpp \
 			$S/main.cpp
 INCS	=	$I/Server.hpp \
-			$I/Channel.cpp \
-			$I/Client.cpp \
+			$I/Channel.hpp \
+			$I/Client.hpp \
 			$I/rpl.hpp
 OBJ		=	$(SRC:$S/%.cpp=$O/%.o)
 CC		=	clang++

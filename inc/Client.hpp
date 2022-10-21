@@ -1,7 +1,10 @@
-#pragma once
+#ifndef Client_CLASS_H
+# define Client_CLASS_H
 
 #include <iostream>
-#include "Channel.hpp"
+#include <vector>
+
+class Channel;
 
 class Client
 {
@@ -47,3 +50,5 @@ class Client
 		void					join(Channel *chan);
 		void					leave(Channel *chan);
 };
+
+#endif
