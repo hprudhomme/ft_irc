@@ -19,7 +19,7 @@ class Client
 
 		std::vector<Channel *> _user_chans;
 
-		std::string	_command;
+		std::string	_partial_recv;
 	public:
 		Client(int fd, std::string const &hostname, int port);
 		~Client();
@@ -33,6 +33,7 @@ class Client
 		std::string const 		&getNickName () { return _nickname; };
 		std::string const 		&getUserName () { return _username; };
 		std::string const 		&getRealName () { return _realname; };
+		std::string const 		&getPartialRecv () { return _partial_recv; };
 
 		std::vector<Channel *> 	getUserChans() { return _user_chans; };
 
@@ -41,6 +42,7 @@ class Client
 		void 					setNickname(const std::string &nickname) { _nickname = nickname; };
 		void 					setUsername(const std::string &username) { _username = username; };
 		void 					setRealName(const std::string &realname) { _realname = realname; };
+		void 					setPartialRecv(const std::string &partial_recv) { _partial_recv = partial_recv; };
 
 		// OTHER
 

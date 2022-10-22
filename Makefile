@@ -16,6 +16,9 @@ CC		=	clang++
 CFLAGS	=	-Wall -Werror -Wextra -std=c++98 -I$I -g
 LDFLAGS	=
 
+DEBUG		=	0
+BUFFER_SIZE	=	4096
+
 ERASE		=	\033[2K\r
 BLUE		=	\033[34m
 YELLOW		=	\033[33m
@@ -28,7 +31,7 @@ $O:
 	@mkdir -p $O
 
 $O/%.o: $S/%.cpp Makefile $(INCS) | $O
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -D DEBUG=$(DEBUG) -D BUFFER_SIZE=$(BUFFER_SIZE) -c $< -o $@
 	printf "$(BLUE)-> $<$(END)\n"
 
 $(NAME): $(OBJ)
@@ -45,5 +48,10 @@ fclean:	clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+debugflags:
+	$(eval DEBUG=1)
+
+debug: debugflags all
+
+.PHONY: all clean fclean re debug
 .SILENT:

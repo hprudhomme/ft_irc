@@ -6,14 +6,11 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 17:38:25 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/22 18:00:47 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
-
-#define TRUE 1
-#define FALSE 0
 
 Server::Server(void): _port(DEFAULT_PORT), _welcome_message(DEFAULT_WELCOME_MESSAGE), _clients_fds(NULL)
 {
@@ -56,13 +53,7 @@ void	Server::listen(void)
 		return;
 	}
 
-	// Set socket to be nonblocking. (clients sockets will inherit)
-	if (fcntl(this->_server_socket, F_SETFL, O_NONBLOCK) < 0)
-	{
-		std::cout << "Error: Can't set socket to non-blocking." << std::endl;
-		close(this->_server_socket);
-		return;
-	}
+	this->_setNonBlocking(this->_server_socket);
 
 	//type of socket created
 	const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
@@ -95,7 +86,7 @@ void	Server::listen(void)
 
 void	Server::_waitActivity(void)
 {
-	char	buffer[1025];
+	char	buffer[BUFFER_SIZE + 1];
 	int		socket;
 
 	int		close_conn;
@@ -110,6 +101,9 @@ void	Server::_waitActivity(void)
 	{
 		if(this->_clients_fds[i].revents == 0)
 			continue;
+		Client *client = NULL;
+		if (i > 0)
+			client = &this->_clients[i - 1];
 
 		// if something append in the master socket, it's an incomming connection
 		if (this->_clients_fds[i].fd == this->_server_socket)
@@ -153,15 +147,35 @@ void	Server::_waitActivity(void)
 				buffer[ret] = '\0';
 				std::string buff = buffer;
 
-				std::cout << "recv(" << this->_clients_fds[i].fd << "): " << buff;
-
-				this->send("You sent: " + buff, this->_clients_fds[i].fd);
-				this->broadcastExclude("Someone sent: " + buff, this->_clients_fds[i].fd);
+				if (buff.at(buff.size() - 1) == '\n') {
+					this->handleMessage(client->getPartialRecv() + buff, *client);
+					client->setPartialRecv("");
+				}
+				else
+				{
+					client->setPartialRecv(client->getPartialRecv() + buff);
+					if (DEBUG)
+						std::cout << "partial recv(" << client->getFD() << "): " << buff << std::endl;
+				}
 			} while(TRUE);
 
 			if (close_conn)
 				this->delClient(this->_clients_fds[i].fd);
 		}
+	}
+}
+
+void	Server::_setNonBlocking(int fd)
+{
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1)
+		flags = 0;
+
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0)
+	{
+		std::cout << "Error: Can't set socket to non-blocking." << std::endl;
+		if (fd != this->_server_socket)
+			this->delClient(fd);
 	}
 }
 
@@ -193,6 +207,7 @@ void	Server::broadcastExclude(std::string message, int exclude_fd) const
 int	Server::addClient(int socket, std::string ip, int port)
 {
 	this->_clients.push_back(Client(socket, ip, port));
+	this->_setNonBlocking(socket);
 	this->_constructFds();
 	std::cout << "* New connection {fd: " << socket
 		<< ", ip: " << ip
@@ -222,6 +237,16 @@ int	Server::delClient(int socket)
 	return this->_clients.size();
 }
 
+Client	*Server::getClient(int fd)
+{
+	for (unsigned long i = 0; i < this->_clients.size(); i++)
+	{
+		if (this->_clients[i].getFD() == fd)
+			return &this->_clients[i];
+	}
+	return NULL;
+}
+
 void	Server::_constructFds(void)
 {
 	if (this->_clients_fds)
@@ -236,4 +261,13 @@ void	Server::_constructFds(void)
 		this->_clients_fds[i + 1].fd = this->_clients[i].getFD();
 		this->_clients_fds[i + 1].events = POLLIN;
 	}
+}
+
+void	Server::handleMessage(std::string const message, Client client)
+{
+	if (DEBUG)
+		std::cout << "recv(" << client.getFD() << "): " << message;
+
+	this->send("You sent: " + message, client.getFD());
+	this->broadcastExclude("Someone sent: " + message, client.getFD());
 }

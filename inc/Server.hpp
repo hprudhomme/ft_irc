@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 16:23:39 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/22 17:33:18 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ private:
 
 	void				_waitActivity(void);
 	void				_constructFds(void);
+	void 				_setNonBlocking(int fd);
 
 public:
 	Server(void);
@@ -58,9 +59,11 @@ public:
 	void	listen(void);
 	int		addClient(int const fd, std::string const ip, int const port);
 	int		delClient(int fd);
+	Client	*getClient(int fd);
 	ssize_t	send(std::string const message, int const client_fd) const;
 	void	broadcast(std::string const message) const;
 	void	broadcastExclude(std::string const message, int const exclude_fd) const;
+	void	handleMessage(std::string const message, Client client);
 };
 
 #endif
