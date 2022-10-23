@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/23 12:05:26 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/23 19:19:58 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void	Server::_receiveData(Client *client)
 			std::string buff = buffer;
 
 			if (buff.at(buff.size() - 1) == '\n') {
-				this->handleMessage(client->getPartialRecv() + buff, *client);
+				this->_handleMessage(client->getPartialRecv() + buff, *client);
 				client->setPartialRecv("");
 			}
 			else
