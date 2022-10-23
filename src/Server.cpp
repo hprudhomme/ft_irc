@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/22 18:00:47 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/23 12:05:26 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,6 @@ void	Server::listen(void)
 
 void	Server::_waitActivity(void)
 {
-	char	buffer[BUFFER_SIZE + 1];
-	int		socket;
-
-	int		close_conn;
-
 	// wait for an activity in a socket
 	int rc = poll(this->_clients_fds, this->_clients.size() + 1, -1);
 	if (rc < 0)
@@ -99,70 +94,79 @@ void	Server::_waitActivity(void)
 	// loop in every client socket for a connection
 	for(unsigned long i=0; i < this->_clients.size() + 1; i++)
 	{
+		// revents will be != 0 if there is an activity on the socket
 		if(this->_clients_fds[i].revents == 0)
 			continue;
-		Client *client = NULL;
-		if (i > 0)
-			client = &this->_clients[i - 1];
 
 		// if something append in the master socket, it's an incomming connection
 		if (this->_clients_fds[i].fd == this->_server_socket)
+			this->_acceptConnection();
+		else if (i > 0) // should be always true, because the first socket is the server socket
 		{
-			do {
-				struct sockaddr_in6 address;
-				int addrlen;
+			Client *client = &this->_clients[i - 1];
+			this->_receiveData(client);
+		}
+	}
+}
 
-				socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-				if (socket < 0)
-				{
-					if (errno != EWOULDBLOCK)
-						std::cout << "Error: Failed to accept connection." << std::endl;
-					break;
-				}
-				this->send(this->_welcome_message, socket);
-				this->addClient(socket, ft_inet_ntop6(&address.sin6_addr), ntohs(address.sin6_port));
-			} while (socket != -1);
+void	Server::_acceptConnection(void)
+{
+	int	socket;
+
+	do {
+		struct sockaddr_in6 address;
+		int addrlen;
+
+		socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
+		if (socket < 0)
+		{
+			if (errno != EWOULDBLOCK)
+				std::cout << "Error: Failed to accept connection." << std::endl;
+			break;
+		}
+		this->send(this->_welcome_message, socket);
+		this->addClient(socket, ft_inet_ntop6(&address.sin6_addr), ntohs(address.sin6_port));
+	} while (socket != -1);
+}
+
+void	Server::_receiveData(Client *client)
+{
+	char	buffer[BUFFER_SIZE + 1];
+
+	do {
+		int ret = recv(client->getFD(), buffer, sizeof(buffer), 0);
+		if (ret < 0)
+		{
+			if (errno != EWOULDBLOCK)
+			{
+				std::cout << "Error: recv() failed for fd " << client->getFD();
+				this->delClient(client->getFD());
+			}
+			// no more data to receive
+			break;
+		}
+		else if (!ret)
+		{
+			this->delClient(client->getFD());
+			break;
 		}
 		else
 		{
-			close_conn = FALSE;
-			do {
-				int ret = recv(this->_clients_fds[i].fd, buffer, sizeof(buffer), 0);
-				if (ret < 0)
-				{
-					if (errno != EWOULDBLOCK)
-					{
-						std::cout << "Error: recv() failed for fd " << this->_clients_fds[i].fd;
-						close_conn = TRUE;
-					}
-					break;
-				}
+			buffer[ret] = '\0';
+			std::string buff = buffer;
 
-				if (ret == 0)
-				{
-					close_conn = TRUE;
-					break;
-				}
-
-				buffer[ret] = '\0';
-				std::string buff = buffer;
-
-				if (buff.at(buff.size() - 1) == '\n') {
-					this->handleMessage(client->getPartialRecv() + buff, *client);
-					client->setPartialRecv("");
-				}
-				else
-				{
-					client->setPartialRecv(client->getPartialRecv() + buff);
-					if (DEBUG)
-						std::cout << "partial recv(" << client->getFD() << "): " << buff << std::endl;
-				}
-			} while(TRUE);
-
-			if (close_conn)
-				this->delClient(this->_clients_fds[i].fd);
+			if (buff.at(buff.size() - 1) == '\n') {
+				this->handleMessage(client->getPartialRecv() + buff, *client);
+				client->setPartialRecv("");
+			}
+			else
+			{
+				client->setPartialRecv(client->getPartialRecv() + buff);
+				if (DEBUG)
+					std::cout << "partial recv(" << client->getFD() << "): " << buff << std::endl;
+			}
 		}
-	}
+	} while(TRUE);
 }
 
 void	Server::_setNonBlocking(int fd)
@@ -263,7 +267,7 @@ void	Server::_constructFds(void)
 	}
 }
 
-void	Server::handleMessage(std::string const message, Client client)
+void	Server::_handleMessage(std::string const message, Client client)
 {
 	if (DEBUG)
 		std::cout << "recv(" << client.getFD() << "): " << message;

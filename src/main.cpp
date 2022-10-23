@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:48:59 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 16:22:00 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/22 18:07:05 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,6 @@
 
 int main()
 {
-	Server	irc = Server(8029);
+	Server	irc = Server();
 	irc.listen();
 }
