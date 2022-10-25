@@ -13,7 +13,7 @@ INCS	=	$I/Server.hpp \
 			$I/rpl.hpp
 OBJ		=	$(SRC:$S/%.cpp=$O/%.o)
 CC		=	clang++
-CFLAGS	=	-Wall -Werror -Wextra -std=c++98 -I$I -g
+CFLAGS	=	-Wall -Werror -Wextra -g --std=c++98
 LDFLAGS	=
 
 DEBUG		=	0
@@ -31,11 +31,11 @@ $O:
 	@mkdir -p $O
 
 $O/%.o: $S/%.cpp Makefile $(INCS) | $O
-	$(CC) $(CFLAGS) -D DEBUG=$(DEBUG) -D BUFFER_SIZE=$(BUFFER_SIZE) -c $< -o $@
+	$(CC) $(CFLAGS) -I$I -D DEBUG=$(DEBUG) -D BUFFER_SIZE=$(BUFFER_SIZE) -c $< -o $@
 	printf "$(BLUE)-> $<$(END)\n"
 
 $(NAME): $(OBJ)
-	$(CC) $(LDFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(LDFLAGS) -I$I $(OBJ) -o $(NAME)
 	printf "$(GREEN)$(NAME) made$(END)\n"
 
 clean:
