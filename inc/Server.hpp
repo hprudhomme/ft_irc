@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/23 12:05:44 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/25 22:20:15 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,21 @@ class Client;
 
 class Server {
 private:
-	const int			_port;
-	std::vector<Client>	_clients;
-	std::string			_welcome_message;
+	const int				_port;
+	std::string 			_password;
+	std::vector<Client *>	_clients;
+	std::vector<Channel *>	_channels;
+	std::string				_welcome_message;
 
-	int					_server_socket;
-	struct pollfd		*_clients_fds;
+	int						_server_socket;
+	struct pollfd			*_clients_fds;
 
-	void				_waitActivity(void);
-	void				_constructFds(void);
-	void 				_setNonBlocking(int fd);
-	void				_acceptConnection(void);
-	void 				_receiveData(Client *client);
-	void				_handleMessage(std::string const message, Client client);
+	void					_waitActivity(void);
+	void					_constructFds(void);
+	void 					_setNonBlocking(int fd);
+	void					_acceptConnection(void);
+	void 					_receiveData(Client *client);
+	void					_handleMessage(std::string const message, Client client);
 
 public:
 	Server(void);
@@ -59,13 +61,20 @@ public:
 	~Server(void);
 	// Server &operator =(const Server &src);
 
-	void	listen(void);
-	int		addClient(int const fd, std::string const ip, int const port);
-	int		delClient(int fd);
-	Client	*getClient(int fd);
-	ssize_t	send(std::string const message, int const client_fd) const;
-	void	broadcast(std::string const message) const;
-	void	broadcastExclude(std::string const message, int const exclude_fd) const;
+	// Server
+	void			listen(void);
+	ssize_t			send(std::string const message, int const client_fd) const;
+	void			broadcast(std::string const message) const;
+	void			broadcastExclude(std::string const message, int const exclude_fd) const;
+	std::string&	getPassword() { return _password; };
+	// Client
+	int				addClient(int const fd, std::string const ip, int const port);
+	int				delClient(int fd);
+	Client*			getClient(int fd);
+	Client*			getClient(const std::string &nickname);
+	// Channel
+	Channel*		getChannel(std::string const &name);
+	Channel* 		createChannel(std::string const &name, std::string const &password, Client *client);
 };
 
 #endif

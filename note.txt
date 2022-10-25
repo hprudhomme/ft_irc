@@ -1,0 +1,5 @@
+1: KickCommand.cpp => message d'erreur;
+
+2: NickCommand.cpp => welcome message ?;
+
+3: do UserCommand; !!!!!!!!!!!!!!!!!!!!

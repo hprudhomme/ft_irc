@@ -13,7 +13,7 @@ private:
 	Client		*_admin;
 
 	int 		_l; //max user in chan
-	bool		_i; //invite-only chan
+	int			_i; //invite-only chan
 	std::string _k; //chan's key(paasword)
 
 	std::vector<Client *> _clients;
@@ -21,15 +21,19 @@ private:
 
 	Server *_server;
 public:
-	Channel(std::string const &name, Client *admin, Server *server);
+	Channel(std::string const &name, const std::string &password, Client *admin, Server *server);
 	~Channel();
 
 	// GETTERS
 
 	Client						*getAdmin() const { return _admin; };
 	std::string const 			&getName() const { return _name; };
-	std::string const 			&getPassWord() const { return _k; };
+	std::string const 			&getPassword() const { return _k; };
 	int							getMaxUsers() const { return _l; };
+	int							invitOnlyChan() { return _i; }
+
+	std::vector<Client *> 		getChanClients() { return _clients; };
+	std::vector<Client *> 		getChanOpers() { return _oper_clients; };
 
 	int							getNbrClients() const { return _clients.size(); };
 	std::vector<std::string>	getNickNames();
@@ -38,6 +42,7 @@ public:
 
 	void						setPassword(std::string k) { _k = k; };
 	void						setMaxClients(int l) { _l = l; };
+	void						setInviteOnly(bool active) { active ? _i = 1 : _i = 0; };
 
 	// OTHER
 

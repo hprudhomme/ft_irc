@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/23 19:19:58 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/25 22:27:58 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	Server::_waitActivity(void)
 			this->_acceptConnection();
 		else if (i > 0) // should be always true, because the first socket is the server socket
 		{
-			Client *client = &this->_clients[i - 1];
+			Client *client = this->_clients[i - 1];
 			this->_receiveData(client);
 		}
 	}
@@ -195,7 +195,7 @@ void	Server::broadcast(std::string message) const
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		this->send(message, this->_clients[i].getFD());
+		this->send(message, this->_clients[i]->getFD());
 	}
 }
 
@@ -203,14 +203,14 @@ void	Server::broadcastExclude(std::string message, int exclude_fd) const
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i].getFD() != exclude_fd)
-			this->send(message, this->_clients[i].getFD());
+		if (this->_clients[i]->getFD() != exclude_fd)
+			this->send(message, this->_clients[i]->getFD());
 	}
 }
 
 int	Server::addClient(int socket, std::string ip, int port)
 {
-	this->_clients.push_back(Client(socket, ip, port));
+	this->_clients.push_back(new Client(socket, ip, port));
 	this->_setNonBlocking(socket);
 	this->_constructFds();
 	std::cout << "* New connection {fd: " << socket
@@ -224,13 +224,13 @@ int	Server::delClient(int socket)
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i].getFD() == socket)
+		if (this->_clients[i]->getFD() == socket)
 		{
 			close(socket);
 
-			std::cout << "* Closed connection {fd: " << this->_clients[i].getFD()
-				<< ", ip: " << this->_clients[i].getHostName()
-				<< ", port: " << this->_clients[i].getPort()
+			std::cout << "* Closed connection {fd: " << this->_clients[i]->getFD()
+				<< ", ip: " << this->_clients[i]->getHostName()
+				<< ", port: " << this->_clients[i]->getPort()
 				<< "}" << std::endl;
 
 			this->_clients.erase(this->_clients.begin() + i);
@@ -245,8 +245,20 @@ Client	*Server::getClient(int fd)
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		if (this->_clients[i].getFD() == fd)
-			return &this->_clients[i];
+		if (this->_clients[i]->getFD() == fd)
+			return this->_clients[i];
+	}
+	return NULL;
+}
+
+Client *Server::getClient(const std::string &nickname)
+{
+	std::vector<Client *>::iterator it = _clients.begin();
+
+	while (it != _clients.end())
+	{
+		if ((*it)->getNickName() == nickname)
+			return *it;
 	}
 	return NULL;
 }
@@ -262,9 +274,27 @@ void	Server::_constructFds(void)
 
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
-		this->_clients_fds[i + 1].fd = this->_clients[i].getFD();
+		this->_clients_fds[i + 1].fd = this->_clients[i]->getFD();
 		this->_clients_fds[i + 1].events = POLLIN;
 	}
+}
+
+Channel *Server::getChannel(const std::string &name)
+{
+	std::vector<Channel *>::iterator it;
+	for (it = _channels.begin(); it != _channels.end(); it++)
+		if (it.operator*()->getName() == name)
+			return it.operator*();
+
+	return NULL;
+}
+
+Channel *Server::createChannel(const std::string &name, std::string const &password, Client *client)
+{
+	Channel *channel = new Channel(name, password, client, this);
+	_channels.push_back(channel);
+
+	return channel;
 }
 
 void	Server::_handleMessage(std::string const message, Client client)

@@ -9,6 +9,7 @@ class Channel;
 class Client
 {
 	private:
+		int 		_is_registered;
 		int			_fd;
 		std::string _hostname;
 		int 		_port;
@@ -48,9 +49,10 @@ class Client
 
 		void 					write(const std::string &message) const;
 		void 					reply(const std::string &reply);
+		std::string 			getPrefix() const;
 		void 					welcome();
 		void					join(Channel *chan);
-		void					leave(Channel *chan);
+		void					leave(Channel *chan) { (void) chan;/*_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());*/ };
 };
 
 #endif
