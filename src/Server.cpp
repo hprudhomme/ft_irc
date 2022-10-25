@@ -6,14 +6,11 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 16:33:49 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/10/23 19:19:58 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
-
-#define TRUE 1
-#define FALSE 0
 
 Server::Server(void): _port(DEFAULT_PORT), _welcome_message(DEFAULT_WELCOME_MESSAGE), _clients_fds(NULL)
 {
@@ -38,11 +35,11 @@ Server::~Server(void)
 
 void	Server::listen(void)
 {
-	struct sockaddr_in address;
+	struct sockaddr_in6 address;
 	int opt = 1;
 
 	//create a master socket
-	this->_server_socket = socket(AF_INET , SOCK_STREAM , 0);
+	this->_server_socket = socket(AF_INET6, SOCK_STREAM , IPPROTO_TCP);
 	if(this->_server_socket == 0)
 	{
 		std::cout << "Error: Socket creation failed." << std::endl;
@@ -56,21 +53,14 @@ void	Server::listen(void)
 		return;
 	}
 
-	// Set socket to be nonblocking. (clients sockets will inherit)
-	if (fcntl(this->_server_socket, F_SETFL, O_NONBLOCK) < 0)
-	{
-		std::cout << "Error: Can't set socket to non-blocking." << std::endl;
-		close(this->_server_socket);
-		return;
-	}
+	this->_setNonBlocking(this->_server_socket);
 
 	//type of socket created
-	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = INADDR_ANY;
-	address.sin_port = htons(this->_port);
-	// address.sin6_family = AF_INET6;
-	// address.sin6_addr.s_addr = INADDR_ANY;
-	// address.sin6_port = htons(this->_port);
+	const struct in6_addr in6addr_any = IN6ADDR_ANY_INIT;
+	address.sin6_family = AF_INET6;
+	address.sin6_addr = in6addr_any;
+	address.sin6_port = htons(this->_port);
+
 
 	if (bind(this->_server_socket, (struct sockaddr *)&address, sizeof(address))<0)
 	{
@@ -79,7 +69,7 @@ void	Server::listen(void)
 		return;
 	}
 
-	std::cout << "Starting ft_irc on port " << ntohs(address.sin_port) << std::endl;
+	std::cout << "Starting ft_irc on port " << this->_port << std::endl;
 
 	// listen
 	if (::listen(this->_server_socket, 32) < 0)
@@ -96,11 +86,6 @@ void	Server::listen(void)
 
 void	Server::_waitActivity(void)
 {
-	char	buffer[1025];
-	int		socket;
-
-	int		close_conn;
-
 	// wait for an activity in a socket
 	int rc = poll(this->_clients_fds, this->_clients.size() + 1, -1);
 	if (rc < 0)
@@ -109,60 +94,92 @@ void	Server::_waitActivity(void)
 	// loop in every client socket for a connection
 	for(unsigned long i=0; i < this->_clients.size() + 1; i++)
 	{
+		// revents will be != 0 if there is an activity on the socket
 		if(this->_clients_fds[i].revents == 0)
 			continue;
 
 		// if something append in the master socket, it's an incomming connection
 		if (this->_clients_fds[i].fd == this->_server_socket)
+			this->_acceptConnection();
+		else if (i > 0) // should be always true, because the first socket is the server socket
 		{
-			do {
-				struct sockaddr_in address;
-				int addrlen;
+			Client *client = &this->_clients[i - 1];
+			this->_receiveData(client);
+		}
+	}
+}
 
-				socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
-				if (socket < 0)
-				{
-					if (errno != EWOULDBLOCK)
-						std::cout << "Error: Failed to accept connection." << std::endl;
-					break;
-				}
-				this->send(this->_welcome_message, socket);
-				this->addClient(socket, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
-			} while (socket != -1);
+void	Server::_acceptConnection(void)
+{
+	int	socket;
+
+	do {
+		struct sockaddr_in6 address;
+		int addrlen;
+
+		socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
+		if (socket < 0)
+		{
+			if (errno != EWOULDBLOCK)
+				std::cout << "Error: Failed to accept connection." << std::endl;
+			break;
+		}
+		this->send(this->_welcome_message, socket);
+		this->addClient(socket, ft_inet_ntop6(&address.sin6_addr), ntohs(address.sin6_port));
+	} while (socket != -1);
+}
+
+void	Server::_receiveData(Client *client)
+{
+	char	buffer[BUFFER_SIZE + 1];
+
+	do {
+		int ret = recv(client->getFD(), buffer, sizeof(buffer), 0);
+		if (ret < 0)
+		{
+			if (errno != EWOULDBLOCK)
+			{
+				std::cout << "Error: recv() failed for fd " << client->getFD();
+				this->delClient(client->getFD());
+			}
+			// no more data to receive
+			break;
+		}
+		else if (!ret)
+		{
+			this->delClient(client->getFD());
+			break;
 		}
 		else
 		{
-			close_conn = FALSE;
-			do {
-				int ret = recv(this->_clients_fds[i].fd, buffer, sizeof(buffer), 0);
-				if (ret < 0)
-				{
-					if (errno != EWOULDBLOCK)
-					{
-						std::cout << "Error: recv() failed for fd " << this->_clients_fds[i].fd;
-						close_conn = TRUE;
-					}
-					break;
-				}
+			buffer[ret] = '\0';
+			std::string buff = buffer;
 
-				if (ret == 0)
-				{
-					close_conn = TRUE;
-					break;
-				}
-
-				buffer[ret] = '\0';
-				std::string buff = buffer;
-
-				std::cout << "recv(" << this->_clients_fds[i].fd << "): " << buff;
-
-				this->send("You sent: " + buff, this->_clients_fds[i].fd);
-				this->broadcastExclude("Someone sent: " + buff, this->_clients_fds[i].fd);
-			} while(TRUE);
-
-			if (close_conn)
-				this->delClient(this->_clients_fds[i].fd);
+			if (buff.at(buff.size() - 1) == '\n') {
+				this->_handleMessage(client->getPartialRecv() + buff, *client);
+				client->setPartialRecv("");
+			}
+			else
+			{
+				client->setPartialRecv(client->getPartialRecv() + buff);
+				if (DEBUG)
+					std::cout << "partial recv(" << client->getFD() << "): " << buff << std::endl;
+			}
 		}
+	} while(TRUE);
+}
+
+void	Server::_setNonBlocking(int fd)
+{
+	int flags = fcntl(fd, F_GETFL, 0);
+	if (flags == -1)
+		flags = 0;
+
+	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0)
+	{
+		std::cout << "Error: Can't set socket to non-blocking." << std::endl;
+		if (fd != this->_server_socket)
+			this->delClient(fd);
 	}
 }
 
@@ -194,6 +211,7 @@ void	Server::broadcastExclude(std::string message, int exclude_fd) const
 int	Server::addClient(int socket, std::string ip, int port)
 {
 	this->_clients.push_back(Client(socket, ip, port));
+	this->_setNonBlocking(socket);
 	this->_constructFds();
 	std::cout << "* New connection {fd: " << socket
 		<< ", ip: " << ip
@@ -221,6 +239,16 @@ int	Server::delClient(int socket)
 	}
 	this->_constructFds();
 	return this->_clients.size();
+}
+
+Client	*Server::getClient(int fd)
+{
+	for (unsigned long i = 0; i < this->_clients.size(); i++)
+	{
+		if (this->_clients[i].getFD() == fd)
+			return &this->_clients[i];
+	}
+	return NULL;
 }
 
 void	Server::_constructFds(void)
@@ -269,4 +297,13 @@ Client *Server::getClient(const std::string &nickname)
 			return &*it;
 	}
 	return nullptr;
+}
+
+void	Server::_handleMessage(std::string const message, Client client)
+{
+	if (DEBUG)
+		std::cout << "recv(" << client.getFD() << "): " << message;
+
+	this->send("You sent: " + message, client.getFD());
+	this->broadcastExclude("Someone sent: " + message, client.getFD());
 }
