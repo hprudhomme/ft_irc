@@ -23,3 +23,44 @@ CommandHandler::~CommandHandler()
 	for (std::map<std::string, Command *>::iterator it = _commands.begin(); it != _commands.end(); it++)
 		delete it->second;
 }
+
+void CommandHandler::invoke(Client *client, const std::string &message)
+{
+
+	std::stringstream ssMessage(message);
+	std::string syntax;
+
+	while (std::getline(ssMessage, syntax))
+	{
+
+		syntax = syntax.substr(0, syntax[syntax.length() - 1] == '\r' ? syntax.length() - 1 : syntax.length());
+		std::string name = syntax.substr(0, syntax.find(' '));
+
+		try
+		{
+			Command *command = _commands.at(name);
+
+			std::vector<std::string> arguments;
+
+			std::string buf;
+			std::stringstream ss(syntax.substr(name.length(), syntax.length()));
+
+			while (ss >> buf)
+			{
+				arguments.push_back(buf);
+			}
+
+			if (!client && command->authRequired())
+			{
+				client->reply(ERR_NOTREGISTERED(client->getNickName()));
+				return;
+			}
+
+			command->execute(client, arguments);
+		}
+		catch (const std::out_of_range &e)
+		{
+			client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
+		}
+	}
+}

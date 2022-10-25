@@ -1,8 +1,8 @@
 #include "ft_irc.hpp"
 #include "rpl.hpp"
 
-Channel::Channel(std::string const &name, Client *admin, Server *server)
-					: _name(name), _admin(admin), _server(server) {}
+Channel::Channel(std::string const &name, std::string const &password, Client *admin, Server *server)
+					: _name(name), _k(password) , _admin(admin), _server(server) {}
 Channel::~Channel() {}
 
 std::vector<std::string>	Channel::getNickNames()

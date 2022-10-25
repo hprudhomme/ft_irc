@@ -6,5 +6,6 @@
 #include "Server.hpp"
 #include "CommandHandler.hpp"
 #include "Command.hpp"
+#include "rpl.hpp"
 
 #endif

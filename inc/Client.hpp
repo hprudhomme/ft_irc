@@ -9,6 +9,7 @@ class Channel;
 class Client
 {
 	private:
+		int 		_is_registered;
 		int			_fd;
 		std::string _hostname;
 		int 		_port;

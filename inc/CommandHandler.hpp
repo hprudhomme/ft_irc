@@ -1,7 +1,11 @@
 #ifndef COMMAND_HANDLER_CLASS_H
 # define COMMAND_HANDLER_CLASS_H
 
+#include <iostream>
+#include <string>
+#include <vector>
 #include <map>
+#include <sstream>
 
 class Server;
 class Command;

@@ -238,3 +238,35 @@ void	Server::_constructFds(void)
 		this->_clients_fds[i + 1].events = POLLIN;
 	}
 }
+
+Channel *Server::getChannel(const std::string &name)
+{
+
+	std::vector<Channel *>::iterator it;
+	for (it = _channels.begin(); it != _channels.end(); it++)
+		if (it.operator*()->getName() == name)
+			return it.operator*();
+
+	return nullptr;
+}
+
+Channel *Server::createChannel(const std::string &name, std::string const &password, Client *client)
+{
+
+	Channel *channel = new Channel(name, password, client, this);
+	_channels.push_back(channel);
+
+	return channel;
+}
+
+Client *Server::getClient(const std::string &nickname)
+{
+	std::vector<Client>::iterator it = _clients.begin();
+
+	while (it != _clients.end())
+	{
+		if (it->getNickName() == nickname)
+			return &*it;
+	}
+	return nullptr;
+}

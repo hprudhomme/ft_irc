@@ -38,7 +38,9 @@ class Client;
 class Server {
 private:
 	const int			_port;
+	std::string 		_password;
 	std::vector<Client>	_clients;
+	std::vector<Channel *>	_channels;
 	std::string			_welcome_message;
 
 	int					_server_socket;
@@ -54,6 +56,12 @@ public:
 	// Server(const Server &src);
 	~Server(void);
 	// Server &operator =(const Server &src);
+
+	Channel* 			getChannel(std::string const &name);
+	Client 	 			*getClient(const std::string &nickname);
+	std::string const 	&getPassword() { return _password; };
+
+	Channel* createChannel(std::string const &name, std::string const &password, Client *client);
 
 	void	listen(void);
 	int		addClient(int const fd, std::string const ip, int const port);
