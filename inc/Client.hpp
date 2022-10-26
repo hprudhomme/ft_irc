@@ -27,6 +27,7 @@ class Client
 
 		// GETTERS
 
+		int 					isRegistered() const { return _is_registered; };
 		int						getFD() const { return _fd; };
 		std::string const 		&getHostName() const { return _hostname; };
 		int 					getPort() const { return _port; };
@@ -40,6 +41,7 @@ class Client
 
 		// SETTERS
 
+		void 					setRegistered(int i) { _is_registered = i ;};
 		void 					setNickname(const std::string &nickname) { _nickname = nickname; };
 		void 					setUsername(const std::string &username) { _username = username; };
 		void 					setRealName(const std::string &realname) { _realname = realname; };
@@ -52,7 +54,7 @@ class Client
 		std::string 			getPrefix() const;
 		void 					welcome();
 		void					join(Channel *chan);
-		void					leave(Channel *chan) { (void) chan;/*_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());*/ };
+		void					leave(Channel *chan);
 };
 
 #endif

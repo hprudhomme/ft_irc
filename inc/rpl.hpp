@@ -23,8 +23,12 @@
 #define RPL_NAMREPLY(source, channel, users)	"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)			"366 " + source + " " + channel + " :End of /NAMES list."
 
-#define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason
-
 // COMMAND REPLIES
 
 #define RPL_MODE(source, channel, modes, args)		":" + source + " MODE " + channel + " " + modes + " " + args
+#define RPL_PING(source, token)						":" + source + " PONG :" + token
+#define RPL_QUIT(source, message)					":" + source + " QUIT :Quit: " + message
+#define RPL_JOIN(source, channel)					":" + source + " JOIN :" + channel
+#define RPL_PART(source, channel)					":" + source + " PART :" + channel
+#define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason
+

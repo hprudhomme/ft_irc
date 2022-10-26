@@ -2,10 +2,10 @@
 #include "rpl.hpp"
 
 Client::Client(int fd, std::string const &hostname, int port)
-					: _fd(fd), _hostname(hostname), _port(port) {}
+					: _fd(fd), _hostname(hostname), _port(port), _is_registered(0) {}
 Client::~Client() {}
 
-void Client::write(const std::string &message) const
+void	Client::write(const std::string &message) const
 {
 	std::string buffer = message + "\r\n";
 	if (send(_fd, buffer.c_str(), buffer.length(), 0) < 0)
@@ -17,7 +17,7 @@ std::string Client::getPrefix() const
 	return _nickname + (_username.empty() ? "" : "!" + _username) + (_hostname.empty() ? "" : "@" + _hostname);
 }
 
-void Client::reply(const std::string &reply) {
+void	Client::reply(const std::string &reply) {
 	write(":" + getPrefix() + " " + reply);
 }
 
@@ -31,4 +31,15 @@ void	Client::join(Channel *chan)
 		users.append(*it + " ");
 	reply(RPL_NAMREPLY(_nickname, chan->getName(), users));
 	reply(RPL_ENDOFNAMES(_nickname, chan->getName()));
+
+	chan->broadcast_channel(RPL_JOIN(getPrefix(), chan->getName()));
+}
+
+void 	Client::leave(Channel *chan)
+{
+	_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());
+	chan->broadcast_channel(RPL_PART(getPrefix(), chan->getName()));
+	chan->removeClient(this);
+
+	// message leave chan
 }
