@@ -2,4 +2,8 @@
 
 2: NickCommand.cpp => welcome message ?;
 
-3: do UserCommand; !!!!!!!!!!!!!!!!!!!!
+3: QuitCommand.cpp => server deconnect client;
+
+4: Client.cpp => fct leave => message leave chan;
+
+5: Channel.cpp => fct removeClient => message;
