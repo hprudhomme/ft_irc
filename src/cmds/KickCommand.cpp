@@ -55,14 +55,14 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	std::vector<Client *> opers_chan = chan->getChanOpers();
 	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
 
-	while (it != opers_chan.end())
+	while (it_oper != opers_chan.end())
 	{
 		Client *oper = it_oper.operator*();
 		if (oper == client)
 			break ;
-		++it;
+		++it_oper;
 	}
-	if (it == opers_chan.end())
+	if (it_oper == opers_chan.end())
 	{
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
@@ -73,14 +73,14 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	std::vector<Client *>:: iterator it_user = chan_users.begin();
 
 	Client *user;
-	while (it != chan_users.end())
+	while (it_user != chan_users.end())
 	{
 		user = it_user.operator*();
 		if (user->getNickName() == target)
 			break ;
-		++it;
+		++it_user;
 	}
-	if (it == chan_users.end())
+	if (it_user == chan_users.end())
 	{
 		client->reply(ERR_USERNOTINCHANNEL(client->getNickName(), user->getNickName(), chan_name));
 		return;

@@ -2,7 +2,7 @@
 #include "rpl.hpp"
 
 Client::Client(int fd, std::string const &hostname, int port)
-					: _fd(fd), _hostname(hostname), _port(port), _is_registered(0) {}
+					:  _is_registered(0), _fd(fd), _hostname(hostname), _port(port){}
 Client::~Client() {}
 
 void	Client::write(const std::string &message) const
@@ -42,4 +42,15 @@ void 	Client::leave(Channel *chan)
 	chan->removeClient(this);
 
 	// message leave chan
+}
+
+void	Client::welcome()
+{
+	// TODO: send welcome message
+	
+	// reply(RPL_WELCOME(_nickname, _username, _hostname));
+	// reply(RPL_YOURHOST(_nickname, _hostname));
+	// reply(RPL_CREATED(_nickname, "2019-10-10"));
+	// reply(RPL_MYINFO(_nickname, "ft_irc", "0.1", "i", "o"));
+	std::cout << "Welcome " << _nickname << std::endl;
 }

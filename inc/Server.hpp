@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/25 22:20:15 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/01 11:45:06 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ private:
 	void 					_setNonBlocking(int fd);
 	void					_acceptConnection(void);
 	void 					_receiveData(Client *client);
-	void					_handleMessage(std::string const message, Client client);
+	void					_handleMessage(std::string const message, Client *client);
 
 public:
 	Server(void);

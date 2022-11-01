@@ -14,8 +14,9 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 	_commands["PART"] = new PartCommand(_server);
 	_commands["KICK"] = new KickCommand(_server);
 
-	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
-	_commands["NOTICE"] = new NoticeCommand(_server);
+	// TODO: implement
+	// _commands["PRIVMSG"] = new PrivMsgCommand(_server);
+	//_commands["NOTICE"] = new NoticeCommand(_server);
 }
 
 CommandHandler::~CommandHandler()
@@ -60,7 +61,8 @@ void CommandHandler::invoke(Client *client, const std::string &message)
 		}
 		catch (const std::out_of_range &e)
 		{
-			client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
+			if (name != "CAP")
+				client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
 		}
 	}
 }

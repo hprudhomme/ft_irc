@@ -2,18 +2,12 @@ NAME	=	ft_irc
 O		=	obj
 I		=	inc
 S		=	src
-SRC		=	$S/Server.cpp \
-			$S/Channel.cpp \
-			$S/Client.cpp \
-			$S/utils.cpp \
-			$S/main.cpp
-INCS	=	$I/Server.hpp \
-			$I/Channel.hpp \
-			$I/Client.hpp \
-			$I/rpl.hpp
-OBJ		=	$(SRC:$S/%.cpp=$O/%.o)
+SRCS	=	$(wildcard $S/*.cpp) \
+			$(wildcard $S/cmds/*.cpp)
+INCS	=	$(wildcard $I/*.hpp)
+OBJS	=	$(SRCS:$S/%.cpp=$O/%.o)
 CC		=	clang++
-CFLAGS	=	-Wall -Werror -Wextra -g --std=c++98
+CFLAGS	=	-Wall -Werror -Wextra -g
 LDFLAGS	=
 
 DEBUG		=	0
@@ -31,11 +25,13 @@ $O:
 	@mkdir -p $O
 
 $O/%.o: $S/%.cpp Makefile $(INCS) | $O
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -I$I -D DEBUG=$(DEBUG) -D BUFFER_SIZE=$(BUFFER_SIZE) -c $< -o $@
 	printf "$(BLUE)-> $<$(END)\n"
 
-$(NAME): $(OBJ)
-	$(CC) $(LDFLAGS) -I$I $(OBJ) -o $(NAME)
+$(NAME): $(OBJS)
+	printf "$(INCS)\n"
+	$(CC) $(LDFLAGS) -I$I $(OBJS) -o $(NAME)
 	printf "$(GREEN)$(NAME) made$(END)\n"
 
 clean:

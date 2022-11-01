@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/25 22:27:58 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:07:29 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ void	Server::_acceptConnection(void)
 				std::cout << "Error: Failed to accept connection." << std::endl;
 			break;
 		}
-		this->send(this->_welcome_message, socket);
 		this->addClient(socket, ft_inet_ntop6(&address.sin6_addr), ntohs(address.sin6_port));
 	} while (socket != -1);
 }
@@ -156,7 +155,7 @@ void	Server::_receiveData(Client *client)
 			std::string buff = buffer;
 
 			if (buff.at(buff.size() - 1) == '\n') {
-				this->_handleMessage(client->getPartialRecv() + buff, *client);
+				this->_handleMessage(client->getPartialRecv() + buff, client);
 				client->setPartialRecv("");
 			}
 			else
@@ -297,11 +296,13 @@ Channel *Server::createChannel(const std::string &name, std::string const &passw
 	return channel;
 }
 
-void	Server::_handleMessage(std::string const message, Client client)
+void	Server::_handleMessage(std::string const message, Client *client)
 {
 	if (DEBUG)
-		std::cout << "recv(" << client.getFD() << "): " << message;
+		std::cout << "recv(" << client->getFD() << "): " << message;
 
-	this->send("You sent: " + message, client.getFD());
-	this->broadcastExclude("Someone sent: " + message, client.getFD());
+	CommandHandler	*handler = new CommandHandler(this);
+	handler->invoke(client, message);
+	// this->send("You sent: " + message, client.getFD());
+	// this->broadcastExclude("Someone sent: " + message, client.getFD());
 }
