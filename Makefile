@@ -30,7 +30,6 @@ $O/%.o: $S/%.cpp Makefile $(INCS) | $O
 	printf "$(BLUE)-> $<$(END)\n"
 
 $(NAME): $(OBJS)
-	printf "$(INCS)\n"
 	$(CC) $(LDFLAGS) -I$I $(OBJS) -o $(NAME)
 	printf "$(GREEN)$(NAME) made$(END)\n"
 

@@ -20,6 +20,7 @@
 # include "rpl.hpp"
 
 // utils.cpp
-std::string ft_inet_ntop6(const void *a0);
+std::string					ft_inet_ntop6(const void *a0);
+std::vector<std::string>	ft_split(const std::string& str, char c);
 
 #endif

@@ -47,10 +47,8 @@ void 	Client::leave(Channel *chan)
 void	Client::welcome()
 {
 	// TODO: send welcome message
-	
 	// reply(RPL_WELCOME(_nickname, _username, _hostname));
 	// reply(RPL_YOURHOST(_nickname, _hostname));
 	// reply(RPL_CREATED(_nickname, "2019-10-10"));
 	// reply(RPL_MYINFO(_nickname, "ft_irc", "0.1", "i", "o"));
-	std::cout << "Welcome " << _nickname << std::endl;
 }

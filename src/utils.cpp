@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:00:59 by ocartier          #+#    #+#             */
-/*   Updated: 2022/10/21 17:36:31 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:25:38 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <string>
+#include <vector>
+#include <sstream>
 
 std::string ft_inet_ntop6(const void *a0)
 {
@@ -48,4 +50,17 @@ std::string ft_inet_ntop6(const void *a0)
 		memmove(buf+best+2, buf+best+max, i-best-max+1);
 	}
 	return (buf);
+}
+
+std::vector<std::string> ft_split(const std::string& str, char c)
+{
+	std::vector<std::string> strs;
+	std::string part;
+	std::istringstream part_stream(str);
+
+	while (std::getline(part_stream, part, c))
+	{
+		strs.push_back(part);
+	}
+	return strs;
 }

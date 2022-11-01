@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/01 12:07:29 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:40:50 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,11 @@ void	Server::_receiveData(Client *client)
 			std::string buff = buffer;
 
 			if (buff.at(buff.size() - 1) == '\n') {
-				this->_handleMessage(client->getPartialRecv() + buff, client);
+				std::vector<std::string> cmds = ft_split(client->getPartialRecv() + buff, '\n');
 				client->setPartialRecv("");
+
+				for (std::vector<std::string>::iterator it = cmds.begin(); it != cmds.end(); it++)
+					this->_handleMessage(*it, client);
 			}
 			else
 			{
@@ -258,6 +261,7 @@ Client *Server::getClient(const std::string &nickname)
 	{
 		if ((*it)->getNickName() == nickname)
 			return *it;
+		it++;
 	}
 	return NULL;
 }
@@ -299,10 +303,11 @@ Channel *Server::createChannel(const std::string &name, std::string const &passw
 void	Server::_handleMessage(std::string const message, Client *client)
 {
 	if (DEBUG)
-		std::cout << "recv(" << client->getFD() << "): " << message;
+		std::cout << "recv(" << client->getFD() << "): " << message << std::endl;
 
 	CommandHandler	*handler = new CommandHandler(this);
 	handler->invoke(client, message);
+
 	// this->send("You sent: " + message, client.getFD());
 	// this->broadcastExclude("Someone sent: " + message, client.getFD());
 }

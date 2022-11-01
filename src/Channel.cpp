@@ -14,6 +14,7 @@ std::vector<std::string>	Channel::getNickNames()
 	{
 		Client *client = it.operator*();
 		nicknames.push_back((_admin == client ? "@" : "") + (*it)->getNickName());
+		it++;
 	}
 	return nicknames;
 }

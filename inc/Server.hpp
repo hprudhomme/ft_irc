@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/01 11:45:06 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/01 12:24:55 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 # define SERVER_CLASS_H
 
 # include <vector>
-#include <iostream>
+# include <iostream>
 
-#include <stdio.h>
-#include <string>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <unistd.h>   //close
-#include <arpa/inet.h>    //close
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/ioctl.h>
-#include <sys/poll.h>
-#include <netinet/in.h>
-#include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
+# include <stdio.h>
+# include <string>
+# include <fcntl.h>
+# include <stdlib.h>
+# include <errno.h>
+# include <unistd.h>   //close
+# include <arpa/inet.h>    //close
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <sys/ioctl.h>
+# include <sys/poll.h>
+# include <netinet/in.h>
+# include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 
 # define DEFAULT_PORT 6697
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
