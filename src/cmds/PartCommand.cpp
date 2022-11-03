@@ -15,7 +15,8 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 	std::string name = arguments[0];
 
 	Channel *channel = _server->getChannel(name);
-	if (!channel) {
+	if (!channel) 
+	{
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), name));
 		return;
 	}
@@ -37,5 +38,5 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 	 	return;
 	}
 
-	client->leave(chan);
+	client->leave(chan, 0);
 }

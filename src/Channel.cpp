@@ -19,6 +19,24 @@ std::vector<std::string>	Channel::getNickNames()
 	return nicknames;
 }
 
+void Channel::broadcast(const std::string &message)
+{
+	std::vector<Client *>::iterator it = _clients.begin();
+	for (  ; it != _clients.end(); it++)
+		(*it)->write(message);
+}
+
+void Channel::broadcast(const std::string &message, Client *exclude)
+{
+	std::vector<Client *>::iterator it = _clients.begin();
+	for (  ; it != _clients.end(); it++)
+	{
+		if (*it == exclude)
+			continue;
+		(*it)->write(message);
+	}
+}
+
 void						Channel::broadcast_channel(std::string const &message) const
 {
 	_server->broadcast(message);
@@ -26,9 +44,20 @@ void						Channel::broadcast_channel(std::string const &message) const
 
 void Channel::removeClient(Client *client)
 {
+	std::cout << "Channel::removeClient\n";
 	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
 	_clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
-	client->leave(this);
+	client->leave(this, 1);
+
+	std::vector<Client *>:: iterator it = _clients.begin();
+
+	Client *user;
+	while (it != _clients.end())
+	{
+		user = it.operator*();
+		std::cout << user->getNickName() << "   xxxxxxx\n";
+		++it;
+	}
 
 	if (_clients.empty())
 	{
@@ -49,13 +78,12 @@ void Channel::removeOper(Client *client)
 
 void Channel::kick(Client *client, Client *target, std::string const &reason)
 {
+	std::cout << "Channel::kick\n";
+	broadcast(RPL_KICK(client->getPrefix(), this->getName(), target->getNickName(), reason));
 	_server->broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
 	removeClient(target);
 
-	// test
-	char message[100];
-	sprintf(message, "%s kicked %s from channel %s.", client->getNickName().c_str(), target->getNickName().c_str(),
-			_name.c_str());
+	std::cout << "kicked\n";
 }
 
 

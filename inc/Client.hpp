@@ -54,7 +54,7 @@ class Client
 		std::string 			getPrefix() const;
 		void 					welcome();
 		void					join(Channel *chan);
-		void					leave(Channel *chan);
+		void					leave(Channel *chan, int kicked);
 };
 
 #endif

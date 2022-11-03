@@ -6,7 +6,8 @@ JoinCommand::~JoinCommand() {}
 
 // format : JOIN <channel>{,<channel>} [<key>{,<key>}]
 void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
-{
+{	
+	std::cout << "buzz join\n";
 	if (arguments.empty())
 	{
 		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "PASS"));
@@ -19,6 +20,19 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 	Channel *channel = _server->getChannel(name);
 	if (!channel)
 		channel = _server->createChannel(name, password, client);
+
+	// check already in chan
+	std::vector<Client *> clients = channel->getChanClients();
+	std::vector<Client *>::iterator it;
+
+	it = clients.begin();
+	while (it != clients.end())
+	{	
+		Client *cl = it.operator*();
+		if (cl == client)
+			return ;
+		it++;
+	}
 
 	if (channel->getMaxUsers() > 0 && channel->getNbrClients() >= channel->getMaxUsers())
 	{
