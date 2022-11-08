@@ -54,21 +54,24 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		switch (c) {
 
 			case 'i': {
+				std::cout << "invit\n";
 				channel->setInviteOnly(active);
-				channel->broadcast_channel(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+i" : "-i"), ""));
+				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+i" : "-i"), ""));
 				break;
 			}
 
 			case 'l': {
+				std::cout << "maxClient\n";
 				channel->setMaxClients(active ? std::stol(arguments[p]) : 0);
-				channel->broadcast_channel(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+l" : "-l"), (active ? arguments[p] : "")));
+				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+l" : "-l"), (active ? arguments[p] : "")));
 				p += active ? 1 : 0;
 				break;
 			}
 
 			case 'k': {
+				std::cout << "PassWord\n";
 				channel->setPassword(active ? arguments[p] : "");
-				channel->broadcast_channel(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+k" : "-k"), (active ? arguments[p] : "")));
+				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+k" : "-k"), (active ? arguments[p] : "")));
 				p += active ? 1 : 0;
 				break;
 			}

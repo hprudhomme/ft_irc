@@ -7,13 +7,15 @@ KickCommand::~KickCommand() {}
 // format: KICK <channel> <user> *( "," <user> ) [<comment>]
 void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 {
+	std::cout << "KickExec\n";
 	if (arguments.size() < 2)
 	{
 		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "KICK"));
 		return;
 	}
-	std::string chan_name = arguments[0];
-	std::string target = arguments[1];
+	std::string chan_name = arguments[1];
+	std::cout << chan_name << std::endl;
+	std::string target = arguments[2];
 	std::string reason = "No reason specified.";
 
 	if (arguments.size() >= 3)
@@ -38,6 +40,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (it == client_chans.end())
 	{
+		std::cout << "error 4\n";
 		client->reply(ERR_NOTONCHANNEL(client->getNickName(), chan_name));
 		return;
 	}
@@ -47,6 +50,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	// is_admin
 	if (chan->getAdmin() != client)
 	{
+		std::cout << "error 3\n";
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
 	}
@@ -64,6 +68,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (it_oper == opers_chan.end())
 	{
+		std::cout << "error 2\n";
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
 	}
@@ -73,15 +78,18 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	std::vector<Client *>:: iterator it_user = chan_users.begin();
 
 	Client *user;
+	std::string nn;
 	while (it_user != chan_users.end())
 	{
 		user = it_user.operator*();
-		if (user->getNickName() == target)
+		nn = ":" + user->getNickName();
+		if (nn == target)
 			break ;
 		++it_user;
 	}
 	if (it_user == chan_users.end())
 	{
+		std::cout << "error 1\n";
 		client->reply(ERR_USERNOTINCHANNEL(client->getNickName(), user->getNickName(), chan_name));
 		return;
 	}

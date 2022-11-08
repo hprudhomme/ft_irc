@@ -40,12 +40,15 @@ public:
 
 	// SETTERS
 
+	void						setAdmin(Client *client) { _admin = client; };
 	void						setPassword(std::string k) { _k = k; };
 	void						setMaxClients(int l) { _l = l; };
 	void						setInviteOnly(bool active) { active ? _i = 1 : _i = 0; };
 
 	// OTHER
 
+	void 						broadcast(std::string const &message);
+	void 						broadcast(const std::string &message, Client *exclude);
 	void 						removeClient(Client *client);
 	void 						removeOper(Client *client);
 	void						addClient(Client *client) { _clients.push_back(client); };

@@ -7,3 +7,9 @@
 4: Client.cpp => fct leave => message leave chan;
 
 5: Channel.cpp => fct removeClient => message;
+
+6: Channel.hpp => rajouter fct addOper;
+
+7: KickCommand.cpp => message => ... got kicked;
+
+8: JoinCommand.cpp => faire => already in chan;
