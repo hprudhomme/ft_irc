@@ -32,7 +32,7 @@ public:
 	int							getMaxUsers() const { return _l; };
 	int							invitOnlyChan() { return _i; }
 
-	std::vector<Client *> 		getChanClients() { return _clients; };
+	std::vector<Client *> 		getChanClients() const { return _clients; };
 	std::vector<Client *> 		getChanOpers() { return _oper_clients; };
 
 	int							getNbrClients() const { return _clients.size(); };

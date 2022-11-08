@@ -19,9 +19,9 @@ std::vector<std::string>	Channel::getNickNames()
 	return nicknames;
 }
 
-void						Channel::broadcast_channel(std::string const &message) const
+void	Channel::broadcast_channel(std::string const &message) const
 {
-	_server->broadcast(message);
+	_server->broadcastChannel(message, this);
 }
 
 void Channel::removeClient(Client *client)

@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/01 12:24:55 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:42:43 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ public:
 	void			listen(void);
 	ssize_t			send(std::string const message, int const client_fd) const;
 	void			broadcast(std::string const message) const;
+	void			broadcastChannel(std::string const message, Channel const *channel) const;
 	void			broadcastExclude(std::string const message, int const exclude_fd) const;
 	std::string&	getPassword() { return _password; };
 	// Client
