@@ -39,11 +39,6 @@ void Channel::broadcast(const std::string &message, Client *exclude)
 	}
 }
 
-void						Channel::broadcast_channel(std::string const &message) const
-{
-	_server->broadcast(message);
-}
-
 void Channel::removeClient(Client *client)
 {
 	std::cout << "Channel::removeClient\n";
