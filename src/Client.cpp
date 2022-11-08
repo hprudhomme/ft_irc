@@ -39,24 +39,24 @@ void	Client::join(Channel *chan)
 	reply(RPL_ENDOFNAMES(_nickname, chan->getName()));
 	
 
-	std::vector<Channel *> client_chans = this->getUserChans();
-	std::vector<Channel *>:: iterator it = client_chans.begin();
+	// std::vector<Channel *> client_chans = this->getUserChans();
+	// std::vector<Channel *>:: iterator it = client_chans.begin();
 
-	Channel *chann;
-	while (it != client_chans.end())
-	{
-		chann = it.operator*();
-		if (chann->getName() == chan->getName())
-			break ;
-		++it;
-	}
-	chan->broadcast_channel(RPL_JOIN(getPrefix(), chan->getName()));
+	// Channel *chann;
+	// while (it != client_chans.end())
+	// {
+	// 	chann = it.operator*();
+	// 	if (chann->getName() == chan->getName())
+	// 		break ;
+	// 	++it;
+	// }
+	chan->broadcast(RPL_JOIN(getPrefix(), chan->getName()));
 }
 
 void 	Client::leave(Channel *chan, int kicked)
 {
 	_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());
-	chan->broadcast_channel(RPL_PART(getPrefix(), chan->getName()));
+	chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
 	if (!kicked)
 		chan->removeClient(this);
 

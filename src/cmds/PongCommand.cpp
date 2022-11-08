@@ -4,7 +4,8 @@ PongCommand::PongCommand(Server *server) : Command(server) {}
 
 PongCommand::~PongCommand() {}
 
-void PongCommand::execute(Client *client, std::vector<std::string> arguments) {
+void PongCommand::execute(Client *client, std::vector<std::string> arguments)
+{
 
 	if (arguments.empty()) {
 		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "PONG"));

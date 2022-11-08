@@ -40,6 +40,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (it == client_chans.end())
 	{
+		std::cout << "error 4\n";
 		client->reply(ERR_NOTONCHANNEL(client->getNickName(), chan_name));
 		return;
 	}
@@ -49,6 +50,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	// is_admin
 	if (chan->getAdmin() != client)
 	{
+		std::cout << "error 3\n";
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
 	}
@@ -66,6 +68,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (it_oper == opers_chan.end())
 	{
+		std::cout << "error 2\n";
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
 	}
@@ -86,6 +89,7 @@ void KickCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 	if (it_user == chan_users.end())
 	{
+		std::cout << "error 1\n";
 		client->reply(ERR_USERNOTINCHANNEL(client->getNickName(), user->getNickName(), chan_name));
 		return;
 	}

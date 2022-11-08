@@ -21,15 +21,17 @@ std::vector<std::string>	Channel::getNickNames()
 
 void Channel::broadcast(const std::string &message)
 {
-	std::vector<Client *>::iterator it = _clients.begin();
-	for (  ; it != _clients.end(); it++)
+	std::cout << "buzz broadcast 1\n";
+	std::vector<Client *>::iterator it;;
+	for (it = _clients.begin(); it != _clients.end(); it++)
 		(*it)->write(message);
 }
 
 void Channel::broadcast(const std::string &message, Client *exclude)
 {
-	std::vector<Client *>::iterator it = _clients.begin();
-	for (  ; it != _clients.end(); it++)
+	std::cout << "buzz broadcast 2\n";
+	std::vector<Client *>::iterator it;;
+	for (it = _clients.begin(); it != _clients.end(); it++)
 	{
 		if (*it == exclude)
 			continue;
@@ -79,8 +81,7 @@ void Channel::removeOper(Client *client)
 void Channel::kick(Client *client, Client *target, std::string const &reason)
 {
 	std::cout << "Channel::kick\n";
-	broadcast(RPL_KICK(client->getPrefix(), this->getName(), target->getNickName(), reason));
-	_server->broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
+	broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
 	removeClient(target);
 
 	std::cout << "kicked\n";
