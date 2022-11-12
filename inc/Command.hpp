@@ -132,4 +132,13 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
+class InvitCommand : public Command
+{
+public:
+	InvitCommand(Server *server);
+	~InvitCommand();
+
+	void execute(Client *client, std::vector<std::string> arguments);
+};
+
 #endif

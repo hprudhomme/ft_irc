@@ -13,9 +13,10 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 	_commands["MODE"] = new ModeCommand(_server);
 	_commands["PART"] = new PartCommand(_server);
 	_commands["KICK"] = new KickCommand(_server);
+	_commands["INVIT"] = new InvitCommand(_server);
 
 	// TODO: implement
-	// _commands["PRIVMSG"] = new PrivMsgCommand(_server);
+	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	//_commands["NOTICE"] = new NoticeCommand(_server);
 }
 

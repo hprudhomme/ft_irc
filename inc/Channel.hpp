@@ -13,7 +13,7 @@ private:
 	Client		*_admin;
 
 	int 		_l; //max user in chan
-	int			_i; //invite-only chan
+	int			_i = 0; //invite-only chan
 	std::string _k; //chan's key(paasword)
 
 	std::vector<Client *> _clients;
@@ -32,6 +32,7 @@ public:
 	int							getMaxUsers() const { return _l; };
 	int							invitOnlyChan() { return _i; }
 
+	Client*						getClient(const std::string &nickname);
 	std::vector<Client *> 		getChanClients() { return _clients; };
 	std::vector<Client *> 		getChanOpers() { return _oper_clients; };
 
@@ -54,6 +55,8 @@ public:
 	void						addClient(Client *client) { _clients.push_back(client); };
 	void						addOper(Client *client) { _oper_clients.push_back(client); };
 	void						kick(Client *client, Client *target, std::string const &reason);
+	void						invit(Client *client, Client *target);
+	int 						is_oper(Client *client);
 
 	void						broadcast_channel(std::string const &message) const;
 };

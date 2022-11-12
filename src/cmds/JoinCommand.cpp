@@ -19,7 +19,17 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	Channel *channel = _server->getChannel(name);
 	if (!channel)
+	{
+		std::cout << "create chan\n";
 		channel = _server->createChannel(name, password, client);
+	}
+
+	if (channel->invitOnlyChan())
+	{
+		std::cout << "invit only chan\n";
+		client->reply(ERR_INVITEONLYCHAN(client->getNickName(), channel->getName()));
+		return ;
+	}
 
 	// check already in chan
 	std::vector<Client *> clients = channel->getChanClients();

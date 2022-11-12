@@ -7,7 +7,8 @@ PartCommand::~PartCommand() {}
 // format: PART <channel>{,<channel>} [<reason>]
 void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 
-	if (arguments.empty()) {
+	if (arguments.empty())
+	{
 		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "PART"));
 		return;
 	}
@@ -34,7 +35,7 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 	}
 	if (it == chans.end())
 	{
-		client->reply(ERR_NOTONCHANNEL(client->getNickName(), name));
+		client->write(ERR_NOTONCHANNEL(client->getNickName(), name));
 	 	return;
 	}
 

@@ -17,11 +17,15 @@
 #define ERR_PASSWDMISMATCH(source)						"464 " + source + " :Password incorrect"
 #define ERR_NOTREGISTERED(source)						"451 " + source + " :You have not registered"
 #define ERR_UNKNOWNCOMMAND(source, command)				"421 " + source + " " + command + " :Unknown command"
+#define ERR_USERONCHANNEL(source, target, channel)      "443 " + source + " " + target + " " + channel + " :is already on channel" 
+#define ERR_NOSUCHNICK(source, name)                    "401"  + source + " " + name + " :No such nick/channel"
+#define ERR_INVITEONLYCHAN(source, channel)             "473"  + source + " " + channel + " :Cannot join channel (+i)"
 
 // NUMERIC REPLIES
 #define RPL_WELCOME(source)						"001 " + source + " :Welcome " + source + " to the ft_irc network"
 #define RPL_NAMREPLY(source, channel, users)	"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)			"366 " + source + " " + channel + " :End of /NAMES list."
+#define RPL_INVITING(source, channel, target)   "341"  + source + " INVIT " + channel + " " + target
 
 // COMMAND REPLIES
 
@@ -31,4 +35,4 @@
 #define RPL_JOIN(source, channel)					":" + source + " JOIN :" + channel
 #define RPL_PART(source, channel)					":" + source + " PART :" + channel
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason
-
+#define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message

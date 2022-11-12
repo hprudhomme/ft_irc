@@ -6,6 +6,7 @@ ModeCommand::~ModeCommand() {}
 
 void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 {
+	int chanop = 0;
 	if (arguments.size() < 2 || arguments[0].empty() || arguments[1].empty()) {
 		return;
 	}
@@ -13,30 +14,18 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	std::string target = arguments.at(0);
 
 	Channel *channel = _server->getChannel(target); //MODE on clients not implemented
-	if (!channel) {
+	if (!channel)
+	{
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), target));
 		return;
 	}
 
-	// check if admin
-	if (channel->getAdmin() != client) {
-		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
-		return;
-	}
-
-	// check if chanop
-
-	std::vector<Client *> opers_chan = channel->getChanOpers();
-	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
-
-	while (it_oper != opers_chan.end())
-	{
-		Client *oper = it_oper.operator*();
-		if (oper == client)
-			break ;
-		++it_oper;
-	}
-	if (it_oper == opers_chan.end())
+	// check if admin or chanop
+	if (channel->getAdmin() == client)
+		chanop += 1;
+	if (channel->is_oper(client))
+		chanop += 1;
+	if (chanop == 0)
 	{
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
@@ -72,6 +61,23 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 				std::cout << "PassWord\n";
 				channel->setPassword(active ? arguments[p] : "");
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+k" : "-k"), (active ? arguments[p] : "")));
+				p += active ? 1 : 0;
+				break;
+			}
+
+			case 'o': {
+				std::cout << "Oper\n";
+				Client *c_tar = channel->getClient(arguments[p]);
+				if (!c_tar)
+				{
+					channel->broadcast(ERR_USERNOTINCHANNEL(client->getNickName(), arguments[p], channel->getName()));
+					return ;
+				}
+				if (active)
+					channel->addOper(c_tar);
+				else
+					channel->removeOper(c_tar);
+				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+o" : "-o"), (c_tar->getNickName())));
 				p += active ? 1 : 0;
 				break;
 			}
