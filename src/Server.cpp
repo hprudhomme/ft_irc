@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/08 16:37:06 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/14 15:46:17 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	Server::listen(void)
 		close(this->_server_socket);
 		return;
 	}
+
+	std::cout << address.sin6_addr.s6_addr << std::endl;
 
 	std::cout << "Starting ft_irc on port " << this->_port << std::endl;
 
@@ -187,6 +189,8 @@ void	Server::_setNonBlocking(int fd)
 
 ssize_t	Server::send(std::string message, int client_fd) const
 {
+	if (DEBUG)
+		std::cout << "send(" << client_fd << "): " << message;
 	ssize_t	sent_size = ::send(client_fd, message.c_str(), message.length(), 0);
 	if(sent_size != (ssize_t) message.length())
 		std::cout << "Error: The message has not been sent entirely." << std::endl;

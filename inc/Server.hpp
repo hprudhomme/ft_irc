@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/08 16:28:55 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/14 14:12:13 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <netinet/in.h>
 # include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
 
-# define DEFAULT_PORT 6697
+# define DEFAULT_PORT 6667
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
 
 class Client;

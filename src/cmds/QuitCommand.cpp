@@ -11,4 +11,6 @@ void QuitCommand::execute(Client *client, std::vector<std::string> arguments) {
 
 	client->write(RPL_QUIT(client->getPrefix(), reason));
 	// server disconnect client
+	
+	this->_server->delClient(client->getFD());
 }

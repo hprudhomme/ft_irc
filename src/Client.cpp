@@ -7,11 +7,7 @@ Client::~Client() {}
 
 void	Client::write(const std::string &message) const
 {
-	std::string buffer = message + "\r\n";
-	if (send(_fd, buffer.c_str(), buffer.length(), 0) < 0)
-		throw std::runtime_error("Error while sending message to client.");
-	this->_server->getPassword();
-	// this->_server->send(message + "\r\n", this->getFD());
+	this->_server->send(message + "\r\n", this->getFD());
 }
 
 std::string Client::getPrefix() const
@@ -20,7 +16,7 @@ std::string Client::getPrefix() const
 }
 
 void	Client::reply(const std::string &reply) {
-	write(":" + getPrefix() + " " + reply);
+	this->write(":" + getPrefix() + " " + reply);
 }
 
 void	Client::join(Channel *chan)
@@ -37,9 +33,11 @@ void	Client::join(Channel *chan)
 	std::vector<std::string> nicknames = chan->getNickNames();
 	for (std::vector<std::string>::iterator it = nicknames.begin(); it != nicknames.end(); it++)
 		users.append(*it + " ");
-	reply(RPL_NAMREPLY(_nickname, chan->getName(), users));
-	reply(RPL_ENDOFNAMES(_nickname, chan->getName()));
-	
+	std::string n = "test";
+	reply(RPL_NOTOPIC(this->getNickName(), chan->getName()));
+	reply(RPL_NAMREPLY(this->getNickName(), chan->getName(), users));
+	reply(RPL_ENDOFNAMES(this->getNickName(), chan->getName()));
+
 
 	// std::vector<Channel *> client_chans = this->getUserChans();
 	// std::vector<Channel *>:: iterator it = client_chans.begin();
