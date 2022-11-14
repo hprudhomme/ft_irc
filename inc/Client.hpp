@@ -5,6 +5,7 @@
 #include <vector>
 
 class Channel;
+class Server;
 
 class Client
 {
@@ -21,8 +22,10 @@ class Client
 		std::vector<Channel *> _user_chans;
 
 		std::string	_partial_recv;
+
+		Server	*_server;
 	public:
-		Client(int fd, std::string const &hostname, int port);
+		Client(Server *server, int fd, std::string const &hostname, int port);
 		~Client();
 
 		// GETTERS

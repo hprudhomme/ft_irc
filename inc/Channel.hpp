@@ -12,7 +12,7 @@ private:
 	std::string _name;
 	Client		*_admin;
 
-	int 		_l; //max user in chan
+	int 		_l = 256; //max user in chan
 	int			_i; //invite-only chan
 	std::string _k; //chan's key(paasword)
 

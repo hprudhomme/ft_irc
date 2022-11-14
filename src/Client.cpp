@@ -1,8 +1,8 @@
 #include "ft_irc.hpp"
 #include "rpl.hpp"
 
-Client::Client(int fd, std::string const &hostname, int port)
-					:  _is_registered(0), _fd(fd), _hostname(hostname), _port(port) {}
+Client::Client(Server *server, int fd, std::string const &hostname, int port)
+					: _is_registered(0), _fd(fd), _hostname(hostname), _port(port), _server(server) {}
 Client::~Client() {}
 
 void	Client::write(const std::string &message) const
@@ -10,6 +10,8 @@ void	Client::write(const std::string &message) const
 	std::string buffer = message + "\r\n";
 	if (send(_fd, buffer.c_str(), buffer.length(), 0) < 0)
 		throw std::runtime_error("Error while sending message to client.");
+	this->_server->getPassword();
+	// this->_server->send(message + "\r\n", this->getFD());
 }
 
 std::string Client::getPrefix() const
