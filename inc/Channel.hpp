@@ -33,8 +33,8 @@ public:
 	int							invitOnlyChan() { return _i; }
 
 	Client*						getClient(const std::string &nickname);
-	std::vector<Client *> 		getChanClients() { return _clients; };
-	std::vector<Client *> 		getChanOpers() { return _oper_clients; };
+	std::vector<Client *> 		getChanClients() const { return _clients; };
+	std::vector<Client *> 		getChanOpers() const { return _oper_clients; };
 
 	int							getNbrClients() const { return _clients.size(); };
 	std::vector<std::string>	getNickNames();
