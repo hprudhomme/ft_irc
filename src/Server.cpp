@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/01 12:40:50 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/08 10:43:34 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,6 +298,16 @@ Channel *Server::createChannel(const std::string &name, std::string const &passw
 	_channels.push_back(channel);
 
 	return channel;
+}
+
+void	Server::broadcastChannel(std::string message, Channel const *channel) const
+{
+	std::vector<Client *> clients = channel->getChanClients();
+
+	for (unsigned long i = 0; i < clients.size(); i++)
+	{
+		this->send(message, clients[i]->getFD());
+	}
 }
 
 void	Server::_handleMessage(std::string const message, Client *client)
