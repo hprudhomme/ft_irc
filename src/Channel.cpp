@@ -21,15 +21,14 @@ std::vector<std::string>	Channel::getNickNames()
 
 void Channel::broadcast(const std::string &message)
 {
-	std::cout << "buzz broadcast 1\n";
 	std::vector<Client *>::iterator it;;
 	for (it = _clients.begin(); it != _clients.end(); it++)
 		(*it)->write(message);
+	// this->_server->broadcastChannel(message, this);
 }
 
 void Channel::broadcast(const std::string &message, Client *exclude)
 {
-	std::cout << "buzz broadcast 2\n";
 	std::vector<Client *>::iterator it;;
 	for (it = _clients.begin(); it != _clients.end(); it++)
 	{
@@ -37,6 +36,7 @@ void Channel::broadcast(const std::string &message, Client *exclude)
 			continue;
 		(*it)->write(message);
 	}
+	// this->_server->broadcastChannel(message, exclude->getFD(), this);
 }
 
 void						Channel::broadcast_channel(std::string const &message) const

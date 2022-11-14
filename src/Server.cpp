@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/08 10:43:34 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/08 16:37:06 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void	Server::broadcast(std::string message) const
 	}
 }
 
-void	Server::broadcastExclude(std::string message, int exclude_fd) const
+void	Server::broadcast(std::string message, int exclude_fd) const
 {
 	for (unsigned long i = 0; i < this->_clients.size(); i++)
 	{
@@ -212,7 +212,7 @@ void	Server::broadcastExclude(std::string message, int exclude_fd) const
 
 int	Server::addClient(int socket, std::string ip, int port)
 {
-	this->_clients.push_back(new Client(socket, ip, port));
+	this->_clients.push_back(new Client(this, socket, ip, port));
 	this->_setNonBlocking(socket);
 	this->_constructFds();
 	std::cout << "* New connection {fd: " << socket
@@ -305,10 +305,18 @@ void	Server::broadcastChannel(std::string message, Channel const *channel) const
 	std::vector<Client *> clients = channel->getChanClients();
 
 	for (unsigned long i = 0; i < clients.size(); i++)
-	{
 		this->send(message, clients[i]->getFD());
-	}
 }
+
+void	Server::broadcastChannel(std::string message, int exclude_fd, Channel const *channel) const
+{
+	std::vector<Client *> clients = channel->getChanClients();
+
+	for (unsigned long i = 0; i < clients.size(); i++)
+		if (clients[i]->getFD() != exclude_fd)
+			this->send(message, clients[i]->getFD());
+}
+
 
 void	Server::_handleMessage(std::string const message, Client *client)
 {
@@ -317,7 +325,4 @@ void	Server::_handleMessage(std::string const message, Client *client)
 
 	CommandHandler	*handler = new CommandHandler(this);
 	handler->invoke(client, message);
-
-	// this->send("You sent: " + message, client.getFD());
-	// this->broadcastExclude("Someone sent: " + message, client.getFD());
 }
