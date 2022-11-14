@@ -40,15 +40,15 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments) 
             return;
         }
 
-		chan->broadcast(RPL_NOTICE(client->getPrefix(), target, message), client);
+		//chan->broadcast(RPL_NOTICE(client->getPrefix(), target, message), client);
 		return;
 	}
 
 	Client *dest = _server->getClient(target);
-	if (!dest) 
+	if (!dest)
     {
 		//client->reply(ERR_NOSUCHNICK(client->getNickname(), target));
 		return;
 	}
-	dest->write(RPL_NOTICE(client->getPrefix(), target, message));
+	//dest->write(RPL_NOTICE(client->getPrefix(), target, message));
 }
