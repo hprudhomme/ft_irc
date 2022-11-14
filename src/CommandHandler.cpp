@@ -17,7 +17,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 
 	// TODO: implement
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
-	//_commands["NOTICE"] = new NoticeCommand(_server);
+	_commands["NOTICE"] = new NoticeCommand(_server);
 }
 
 CommandHandler::~CommandHandler()
