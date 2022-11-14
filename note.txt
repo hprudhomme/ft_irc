@@ -13,3 +13,9 @@
 7: KickCommand.cpp => message => ... got kicked;
 
 8: JoinCommand.cpp => faire => already in chan;
+
+
+
+ALREADY CHECK
+
+MODE/KICK/PART/INVIT
