@@ -12,7 +12,7 @@
 #define ERR_NOSUCHCHANNEL(source, channel)				"403 " + source + " " + channel + " :No such channel"
 #define ERR_CHANOPRIVSNEEDED(source, channel)			"482 " + source + " " + channel + " :You're not channel operator"
 #define ERR_NONICKNAMEGIVEN(source)						"431 " + source + " :Nickname not given"
-#define ERR_NICKNAMEINUSE(source)						"433 " + source + " " + source  + " :Nickname is already in use"
+#define ERR_NICKNAMEINUSE(source, nickname)				"433 " + source + " " + nickname + " :Nickname is already in use"
 #define ERR_ALREADYREGISTERED(source)					"462 " + source + " :You may not reregister"
 #define ERR_PASSWDMISMATCH(source)						"464 " + source + " :Password incorrect"
 #define ERR_NOTREGISTERED(source)						"451 " + source + " :You have not registered"
@@ -22,7 +22,11 @@
 #define ERR_INVITEONLYCHAN(source, channel)				"473 " + source + " " + channel + " :Cannot join channel (+i)"
 
 // NUMERIC REPLIES
-#define RPL_WELCOME(source)								"001 " + source + " :Welcome " + source + " to the ft_irc network"
+#define RPL_WELCOME(source, prefix)										"001 " + source + " :Welcome to the Internet Relay Network " + prefix
+#define RPL_YOURHOST(source, servername, version)						"002 " + source + " :Your host is " + servername + ", running version " + version
+#define RPL_CREATED(source, date)										"003 " + source + " :This server was created " + date
+#define RPL_MYINFO(source, servername, version, usermodes, chanmodes)	"004 " + source + " :" + servername + " " + version + " " + usermodes + " " + chanmodes
+
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
 #define RPL_INVITING(source, channel, target)			"341 " + source + " INVIT " + channel + " " + target

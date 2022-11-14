@@ -35,12 +35,12 @@ class Client
 		std::string const 		&getHostName() const { return _hostname; };
 		int 					getPort() const { return _port; };
 
-		std::string const 		&getNickName () { return _nickname; };
-		std::string const 		&getUserName () { return _username; };
-		std::string const 		&getRealName () { return _realname; };
-		std::string const 		&getPartialRecv () { return _partial_recv; };
+		std::string const 		&getNickName() const { return _nickname; };
+		std::string const 		&getUserName() const { return _username; };
+		std::string const 		&getRealName() const { return _realname; };
+		std::string const 		&getPartialRecv() const { return _partial_recv; };
 
-		std::vector<Channel *> 	getUserChans() { return _user_chans; };
+		std::vector<Channel *> 	getUserChans() const { return _user_chans; };
 
 		// SETTERS
 

@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/14 14:12:13 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/14 22:09:17 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 
 # define DEFAULT_PORT 6667
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
+# define DEFAULT_SERVER_NAME "irc.ocartier-hprudhomme.42"
 
 class Client;
 
@@ -42,6 +43,7 @@ private:
 	std::vector<Client *>	_clients;
 	std::vector<Channel *>	_channels;
 	std::string				_welcome_message;
+	std::string				_server_name; // TODO: le récupérer de l'utilisateur
 
 	int						_server_socket;
 	struct pollfd			*_clients_fds;
@@ -69,6 +71,7 @@ public:
 	void			broadcastChannel(std::string const message, Channel const *channel) const;
 	void			broadcastChannel(std::string message, int exclude_fd, Channel const *channel) const;
 	std::string&	getPassword() { return _password; };
+	std::string&	getServerName() { return _server_name; };
 	// Client
 	int				addClient(int const fd, std::string const ip, int const port);
 	int				delClient(int fd);

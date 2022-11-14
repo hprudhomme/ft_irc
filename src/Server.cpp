@@ -6,23 +6,35 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/14 15:46:17 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/14 22:10:15 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 
-Server::Server(void): _port(DEFAULT_PORT), _welcome_message(DEFAULT_WELCOME_MESSAGE), _clients_fds(NULL)
+Server::Server(void):
+	_port(DEFAULT_PORT),
+	_welcome_message(DEFAULT_WELCOME_MESSAGE),
+	_server_name(DEFAULT_SERVER_NAME),
+	_clients_fds(NULL)
 {
 
 }
 
-Server::Server(int port): _port(port), _welcome_message(DEFAULT_WELCOME_MESSAGE), _clients_fds(NULL)
+Server::Server(int port):
+	_port(port),
+	_welcome_message(DEFAULT_WELCOME_MESSAGE),
+	_server_name(DEFAULT_SERVER_NAME),
+	_clients_fds(NULL)
 {
 	// TODO: check that port is ok, throw exception
 }
 
-Server::Server(int port, std::string welcome_message): _port(port), _welcome_message(welcome_message), _clients_fds(NULL)
+Server::Server(int port, std::string welcome_message):
+	_port(port),
+	_welcome_message(welcome_message),
+	_server_name(DEFAULT_SERVER_NAME),
+	_clients_fds(NULL)
 {
 	// TODO: check that port is ok, throw exception
 	// If message doesn't end with a \n, add one

@@ -12,11 +12,14 @@ void	Client::write(const std::string &message) const
 
 std::string Client::getPrefix() const
 {
+	if (this->getNickName().empty())
+		return ("*");
 	return _nickname + (_username.empty() ? "" : "!" + _username) + (_hostname.empty() ? "" : "@" + _hostname);
 }
 
 void	Client::reply(const std::string &reply) {
-	this->write(":" + getPrefix() + " " + reply);
+	// TODO: récupérer le nom du serveur
+	this->write(":" + this->_server->getServerName() + " " + reply);
 }
 
 void	Client::join(Channel *chan)
@@ -65,9 +68,10 @@ void 	Client::leave(Channel *chan, int kicked)
 
 void	Client::welcome()
 {
-	// TODO: send welcome message
-	// reply(RPL_WELCOME(_nickname, _username, _hostname));
-	// reply(RPL_YOURHOST(_nickname, _hostname));
-	// reply(RPL_CREATED(_nickname, "2019-10-10"));
-	// reply(RPL_MYINFO(_nickname, "ft_irc", "0.1", "i", "o"));
+	// TODO: la date doit être celle du démarrage du serv
+	// TODO: voir à quoi correspondent les usermodes et les chanmodes
+	reply(RPL_WELCOME(this->getNickName(), this->getPrefix()));
+	reply(RPL_YOURHOST(this->getNickName(), this->_server->getServerName(), "0.1"));
+	reply(RPL_CREATED(this->getNickName(), "Mon Nov 14 2022 at 16:51:49 CET"));
+	reply(RPL_MYINFO(this->getNickName(), "ft_irc", "0.1", "aiorsw", "IObeiklmnopstv"));
 }
