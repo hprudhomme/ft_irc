@@ -30,7 +30,7 @@ class Client
 
 		// GETTERS
 
-		int 					isRegistered() const { return _is_registered; };
+		bool 					isRegistered() const;
 		int						getFD() const { return _fd; };
 		std::string const 		&getHostName() const { return _hostname; };
 		int 					getPort() const { return _port; };

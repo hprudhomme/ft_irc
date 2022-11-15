@@ -17,6 +17,13 @@ std::string Client::getPrefix() const
 	return _nickname + (_username.empty() ? "" : "!" + _username) + (_hostname.empty() ? "" : "@" + _hostname);
 }
 
+bool	Client::isRegistered() const
+{
+	if (!this->getNickName().empty() && !this->getUserName().empty() && !this->getRealName().empty())
+		return (true);
+	return (false);
+}
+
 void	Client::reply(const std::string &reply) {
 	// TODO: récupérer le nom du serveur
 	this->write(":" + this->_server->getServerName() + " " + reply);
@@ -68,10 +75,29 @@ void 	Client::leave(Channel *chan, int kicked)
 
 void	Client::welcome()
 {
+	if (!this->isRegistered())
+		return ;
 	// TODO: la date doit être celle du démarrage du serv
 	// TODO: voir à quoi correspondent les usermodes et les chanmodes
 	reply(RPL_WELCOME(this->getNickName(), this->getPrefix()));
 	reply(RPL_YOURHOST(this->getNickName(), this->_server->getServerName(), "0.1"));
 	reply(RPL_CREATED(this->getNickName(), "Mon Nov 14 2022 at 16:51:49 CET"));
-	reply(RPL_MYINFO(this->getNickName(), "ft_irc", "0.1", "aiorsw", "IObeiklmnopstv"));
+	reply(RPL_MYINFO(this->getNickName(), this->_server->getServerName(), "0.1", "aiorsw", "IObeiklmnopstv"));
+
+	// TODO: faire des fonction RPL
+	reply("375 " + this->getNickName() + " :- " + this->_server->getServerName() + " Message of the day -");
+	reply("372 " + this->getNickName() + " :- Welcome to our IRC server!");
+
+	reply("372 " + this->getNickName() + " :- .-.-----------.-.");
+	reply("372 " + this->getNickName() + " :- | |--FT_IRC---|#|");
+	reply("372 " + this->getNickName() + " :- | |-----------| |");
+	reply("372 " + this->getNickName() + " :- | |-ocartier--| |");
+	reply("372 " + this->getNickName() + " :- | |-hprudhomme| |");
+	reply("372 " + this->getNickName() + " :- | \"--------42-' |");
+	reply("372 " + this->getNickName() + " :- |  .-----.-..   |");
+	reply("372 " + this->getNickName() + " :- |  |     | || |||");
+	reply("372 " + this->getNickName() + " :- |  |     | || \\/|");
+	reply("372 " + this->getNickName() + " :- \"--^-----^-^^---'");
+
+	reply("376 " + this->getNickName() + " :End of MOTD command");
 }

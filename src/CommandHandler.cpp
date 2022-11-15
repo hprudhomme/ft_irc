@@ -52,7 +52,7 @@ void CommandHandler::invoke(Client *client, const std::string &message)
 				arguments.push_back(buf);
 			}
 
-			if (!client && command->authRequired())
+			if (command->authRequired() && !client->isRegistered())
 			{
 				client->reply(ERR_NOTREGISTERED(client->getNickName()));
 				return;
@@ -62,7 +62,7 @@ void CommandHandler::invoke(Client *client, const std::string &message)
 		}
 		catch (const std::out_of_range &e)
 		{
-			if (name != "CAP")
+			// if (name != "CAP")
 				client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
 		}
 	}

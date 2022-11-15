@@ -6,11 +6,11 @@ JoinCommand::~JoinCommand() {}
 
 // format : JOIN <channel>{,<channel>} [<key>{,<key>}]
 void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
-{	
+{
 	std::cout << "buzz join\n";
 	if (arguments.empty())
 	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "PASS"));
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "JOIN"));
 		return;
 	}
 
@@ -37,7 +37,7 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	it = clients.begin();
 	while (it != clients.end())
-	{	
+	{
 		Client *cl = it.operator*();
 		if (cl == client)
 			return ;

@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/14 22:09:17 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/15 08:54:55 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 # define DEFAULT_PORT 6667
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
-# define DEFAULT_SERVER_NAME "irc.ocartier-hprudhomme.42"
+# define DEFAULT_SERVER_NAME "irc.42.fr"
 
 class Client;
 
