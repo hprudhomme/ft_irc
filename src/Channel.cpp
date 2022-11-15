@@ -21,22 +21,22 @@ std::vector<std::string>	Channel::getNickNames()
 
 void Channel::broadcast(const std::string &message)
 {
-	std::vector<Client *>::iterator it;;
-	for (it = _clients.begin(); it != _clients.end(); it++)
-		(*it)->write(message);
-	// this->_server->broadcastChannel(message, this);
+	// std::vector<Client *>::iterator it;;
+	// for (it = _clients.begin(); it != _clients.end(); it++)
+	// 	(*it)->write(message);
+	this->_server->broadcastChannel(message, this);
 }
 
 void Channel::broadcast(const std::string &message, Client *exclude)
 {
-	std::vector<Client *>::iterator it;;
-	for (it = _clients.begin(); it != _clients.end(); it++)
-	{
-		if (*it == exclude)
-			continue;
-		(*it)->write(message);
-	}
-	// this->_server->broadcastChannel(message, exclude->getFD(), this);
+	// std::vector<Client *>::iterator it;;
+	// for (it = _clients.begin(); it != _clients.end(); it++)
+	// {
+	// 	if (*it == exclude)
+	// 		continue;
+	// 	(*it)->write(message);
+	// }
+	this->_server->broadcastChannel(message, exclude->getFD(), this);
 }
 
 void						Channel::broadcast_channel(std::string const &message) const
@@ -78,6 +78,7 @@ int Channel::is_oper(Client *client)
 void Channel::removeClient(Client *client)
 {
 	std::cout << "Channel::removeClient\n";
+	std::string clientPrefix = client->getPrefix();
 	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
 	_clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
 	client->leave(this, 1);
@@ -87,6 +88,8 @@ void Channel::removeClient(Client *client)
 		// free chan and remove it from server
 		return;
 	}
+
+	this->broadcast(RPL_PART(clientPrefix, this->getName()));
 
 	if (_admin == client)
 		_admin = _clients.begin().operator*();

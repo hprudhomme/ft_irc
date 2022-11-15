@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/14 22:10:15 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/15 09:47:46 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,8 +201,12 @@ void	Server::_setNonBlocking(int fd)
 
 ssize_t	Server::send(std::string message, int client_fd) const
 {
+	if (message[message.size() - 1] != '\n')
+		message += "\n";
+
 	if (DEBUG)
 		std::cout << "send(" << client_fd << "): " << message;
+
 	ssize_t	sent_size = ::send(client_fd, message.c_str(), message.length(), 0);
 	if(sent_size != (ssize_t) message.length())
 		std::cout << "Error: The message has not been sent entirely." << std::endl;

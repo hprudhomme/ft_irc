@@ -7,7 +7,7 @@ Client::~Client() {}
 
 void	Client::write(const std::string &message) const
 {
-	this->_server->send(message + "\r\n", this->getFD());
+	this->_server->send(message, this->getFD());
 }
 
 std::string Client::getPrefix() const
@@ -43,7 +43,9 @@ void	Client::join(Channel *chan)
 	std::vector<std::string> nicknames = chan->getNickNames();
 	for (std::vector<std::string>::iterator it = nicknames.begin(); it != nicknames.end(); it++)
 		users.append(*it + " ");
-	std::string n = "test";
+
+	chan->broadcast(RPL_JOIN(getPrefix(), chan->getName()));
+
 	reply(RPL_NOTOPIC(this->getNickName(), chan->getName()));
 	reply(RPL_NAMREPLY(this->getNickName(), chan->getName(), users));
 	reply(RPL_ENDOFNAMES(this->getNickName(), chan->getName()));
@@ -60,13 +62,13 @@ void	Client::join(Channel *chan)
 	// 		break ;
 	// 	++it;
 	// }
-	chan->broadcast(RPL_JOIN(getPrefix(), chan->getName()));
+	//chan->broadcast(RPL_JOIN(getPrefix(), chan->getName()), this);
 }
 
 void 	Client::leave(Channel *chan, int kicked)
 {
 	_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());
-	chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
+	//chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
 	if (!kicked)
 		chan->removeClient(this);
 
