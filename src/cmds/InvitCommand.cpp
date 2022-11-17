@@ -71,5 +71,6 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 		return ;
 	}
 
+	user = _server->getClient(target);
     chan->invit(client, user);
 }
