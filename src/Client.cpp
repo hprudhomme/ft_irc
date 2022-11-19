@@ -31,6 +31,7 @@ void	Client::reply(const std::string &reply) {
 
 void	Client::join(Channel *chan)
 {
+	std::cout << "client -> join" << this->getNickName() << std::endl;
 	chan->addClient(this);
 	_user_chans.push_back(chan);
 
