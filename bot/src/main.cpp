@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 14:12:52 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 15:15:42 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/19 16:56:41 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ int main()
 		std::cout << "Connection failed" << std::endl;
 		return (1);
 	}
-	bot.listen(getAnswer);
+	if (!bot.listen(getAnswer))
+		return (1);
 }

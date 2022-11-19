@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:58:32 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 15:14:19 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/19 16:54:01 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ bool Bot::listen(std::string (*getAnswer)(std::string message, std::string sende
 	std::cout << "Listening..." << std::endl;
 	do {
 		int ret = recv(this->_server_socket, buffer, sizeof(buffer), 0);
+		if (ret <= 0)
+		{
+			std::cout << "Connection lost" << std::endl;
+			return (false);
+		}
 		buffer[ret] = '\0';
 		std::string buff = buffer;
 		if (DEBUG)
