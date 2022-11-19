@@ -39,11 +39,6 @@ void Channel::broadcast(const std::string &message, Client *exclude)
 	this->_server->broadcastChannel(message, exclude->getFD(), this);
 }
 
-void						Channel::broadcast_channel(std::string const &message) const
-{
-	_server->broadcast(message);
-}
-
 Client *Channel::getClient(const std::string &nickname)
 {
 	std::vector<Client *>::iterator it = _clients.begin();
@@ -79,6 +74,9 @@ void Channel::removeClient(Client *client)
 {
 	std::cout << "Channel::removeClient\n";
 	std::string clientPrefix = client->getPrefix();
+
+	this->broadcast(RPL_PART(clientPrefix, this->getName()));
+
 	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
 	_clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
 	client->leave(this, 1);
@@ -88,8 +86,6 @@ void Channel::removeClient(Client *client)
 		// free chan and remove it from server
 		return;
 	}
-
-	this->broadcast(RPL_PART(clientPrefix, this->getName()));
 
 	if (_admin == client)
 		_admin = _clients.begin().operator*();
@@ -110,10 +106,22 @@ void Channel::kick(Client *client, Client *target, std::string const &reason)
 	removeClient(target);
 }
 
-
 void Channel::invit(Client *client, Client *target)
 {
 	std::cout << "Channel::invit\n";
 	broadcast(RPL_INVITING(client->getPrefix(), _name, target->getNickName()));
 	target->join(this);
+}
+
+bool	Channel::isInChannel(Client *client)
+{
+	std::vector<Client *>::iterator it = _clients.begin();
+
+	while (it != _clients.end())
+	{
+		if (*it == client)
+			return true;
+		it++;
+	}
+	return false;
 }

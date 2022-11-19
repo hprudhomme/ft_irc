@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/18 09:37:11 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/19 15:10:59 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,22 +240,28 @@ int	Server::addClient(int socket, std::string ip, int port)
 
 int	Server::delClient(int socket)
 {
-	for (unsigned long i = 0; i < this->_clients.size(); i++)
+	for (unsigned long client = 0; client < this->_clients.size(); client++)
 	{
-		if (this->_clients[i]->getFD() == socket)
+		if (this->_clients[client]->getFD() == socket)
 		{
-			close(socket);
-
-			std::cout << "* Closed connection {fd: " << this->_clients[i]->getFD()
-				<< ", ip: " << this->_clients[i]->getHostName()
-				<< ", port: " << this->_clients[i]->getPort()
+			std::cout << "* Closed connection {fd: " << this->_clients[client]->getFD()
+				<< ", ip: " << this->_clients[client]->getHostName()
+				<< ", port: " << this->_clients[client]->getPort()
 				<< "}" << std::endl;
 
-			this->_clients.erase(this->_clients.begin() + i);
+			// Remove from channels
+			for (unsigned long chan = 0; chan < this->_channels.size(); chan++)
+			{
+				if (this->_channels[chan]->isInChannel(this->_clients[client]))
+					this->_channels[chan]->removeClient(this->_clients[client]);
+			}
+
+			this->_clients.erase(this->_clients.begin() + client);
 			break;
 		}
 	}
 	this->_constructFds();
+	close(socket);
 	return this->_clients.size();
 }
 

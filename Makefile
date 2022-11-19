@@ -48,5 +48,5 @@ debugflags:
 
 debug: debugflags all
 
-.PHONY: all clean fclean re debug
+.PHONY: all clean fclean re debugflags debug
 .SILENT:
