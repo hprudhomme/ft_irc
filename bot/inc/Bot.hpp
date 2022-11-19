@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:54:26 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 14:53:28 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/19 17:07:27 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,10 @@ public:
 	~Bot(void);
 
 	bool connect(void);
+	bool disconnect(void);
 	bool listen(std::string (*getAnswer)(std::string message, std::string sender));
 	bool send(std::string const &message);
+	bool auth(bool sendNick, bool sendUser, bool sendJoin);
 };
 
 #endif

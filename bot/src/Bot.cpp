@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:58:32 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 16:54:01 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/19 17:13:26 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,29 @@ bool Bot::connect(void)
 	if (::connect(this->_server_socket, (sockaddr*)&hint, (socklen_t)(sizeof(hint))) != 0)
 		return (false);
 
-	if (!this->send("NICK " + this->_nickname +"\r\nUSER " + this->_username + " 0 * :" + this->_realname + "\r\nJOIN " + this->_channel + "\r\n"))
-		return (false);
+	if (!this->auth(true, true, true))
+		return (!this->disconnect());
 
+	return (true);
+}
+
+bool Bot::auth(bool sendNick, bool sendUser, bool sendJoin)
+{
+	if (sendNick)
+		if (!this->send("NICK " + this->_nickname + "\r\n"))
+			return (!this->disconnect());
+	if (sendUser)
+		if (!this->send("USER " + this->_username + " 0 * :" + this->_realname + "\r\n"))
+			return (!this->disconnect());
+	if (sendJoin)
+		if (!this->send("JOIN " + this->_channel + "\r\n"))
+			return (!this->disconnect());
+	return (true);
+}
+
+bool Bot::disconnect(void)
+{
+	close(this->_server_socket);
 	return (true);
 }
 
@@ -84,6 +104,20 @@ bool Bot::listen(std::string (*getAnswer)(std::string message, std::string sende
 
 			if (!answer.empty())
 				this->send("PRIVMSG " + this->_extractChannel(buff) + " :" + answer + "\r\n");
+		}
+		else
+		{
+			std::vector<std::string> splitted = split(buff, " ");
+			if (splitted[1] == "376")
+				std::cout << "Connected to " << this->_server_address << ":" << this->_server_port << std::endl;
+			else if (splitted[1] == "433")
+			{
+				this->_nickname += "_";
+				std::cout << "Nickname taken, trying with " << this->_nickname << std::endl;
+				this->auth(true, false, true);
+			}
+			else if (splitted[1] == "451")
+				std::cout << "Not registered, retrying" << std::endl;
 		}
 
 	} while (42);
