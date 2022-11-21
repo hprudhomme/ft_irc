@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 14:12:52 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/21 10:12:42 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/21 13:49:31 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ std::string getAnswer(std::string message, std::string sender)
 {
 	std::cout << "Message received: " << message << std::endl;
 	if (message == "help")
-		return ("Commands available: help, ping, pong, hi");
+		return ("Commands available: help, ping, pong, hi, dice, joke");
 	else if (message == "ping")
 		return ("pong?");
 	else if (message == "pong")
