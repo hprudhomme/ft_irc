@@ -34,6 +34,12 @@
 #define RPL_NOTOPIC(source, channel)					"331 " + source + " " + channel + " :No topic is set"
 #define RPL_TOPIC(source, channel, topic)				"332 " + source + " " + channel + " :" + topic
 
+#define RPL_WHOREPLY(source, users)                     "352 " + source + " :" + users
+#define RPL_ENDOFWHO(source)                            "315 " + source + " :End of WHO list"
+
+#define RPL_LIST(source, message)                       "322"  + source + " :" + message
+#define RPL_LISTEND(source)                             "323"  + source + " :End of LIST"
+
 // COMMAND REPLIES
 
 #define RPL_MODE(source, channel, modes, args)		":" + source + " MODE " + channel + " " + modes + " " + args

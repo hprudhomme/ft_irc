@@ -141,4 +141,22 @@ public:
 	void execute(Client *client, std::vector<std::string> arguments);
 };
 
+class WhoCommand : public Command
+{
+public:
+	WhoCommand(Server *server);
+	~WhoCommand();
+
+	void execute(Client *client, std::vector<std::string> arguments);
+};
+
+class ListCommand : public Command
+{
+public:
+	ListCommand(Server *server);
+	~ListCommand();
+
+	void execute(Client *client, std::vector<std::string> arguments);
+};
+
 #endif

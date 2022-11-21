@@ -12,7 +12,6 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
 	std::string target = arguments.at(0);
-	std::cout << "target = " << target << std::endl;
 	std::string message;
 
 	for (std::vector<std::string>::iterator it = arguments.begin() + 1; it != arguments.end(); it++) {
@@ -31,7 +30,6 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
         while (it != client_chans.end())
         {
             chan = it.operator*();
-			std::cout << "buzz " << chan->getName() << std::endl;
             if (chan->getName() == target)
                 break ;
             ++it;
@@ -39,7 +37,7 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
         if (it == client_chans.end())
         {
             std::cout << "error 4\n";
-            client->reply(ERR_NOTONCHANNEL(client->getNickName(), chan->getName()));
+            _server->broadcast(ERR_NOTONCHANNEL(client->getNickName(), target));
             return;
         }
 

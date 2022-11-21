@@ -346,3 +346,16 @@ void	Server::_handleMessage(std::string const message, Client *client)
 	CommandHandler	*handler = new CommandHandler(this);
 	handler->invoke(client, message);
 }
+
+std::vector<std::string>	Server::getNickNames()
+{
+	std::vector<std::string> nicknames;
+	std::vector<Client *>::iterator it = _clients.begin();
+
+	while (it != _clients.end())
+	{
+		nicknames.push_back((*it)->getNickName());
+		it++;
+	}
+	return nicknames;
+}

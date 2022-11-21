@@ -79,6 +79,8 @@ void Channel::removeClient(Client *client)
 {
 	std::cout << "Channel::removeClient\n";
 	std::string clientPrefix = client->getPrefix();
+	this->broadcast(RPL_PART(clientPrefix, this->getName()));
+	
 	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
 	_clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
 	client->leave(this, 1);
@@ -88,8 +90,6 @@ void Channel::removeClient(Client *client)
 		// free chan and remove it from server
 		return;
 	}
-
-	this->broadcast(RPL_PART(clientPrefix, this->getName()));
 
 	if (_admin == client)
 		_admin = _clients.begin().operator*();
