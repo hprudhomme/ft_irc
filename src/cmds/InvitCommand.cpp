@@ -23,8 +23,7 @@ void InvitCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
 	// If channel is invit only, check that inviter is admin or operator
-	std::cout << "chan->invitOnlyChan() = " << chan->invitOnlyChan() << std::endl;
-	if (chan->invitOnlyChan() && (chan->getAdmin() != client || !chan->is_oper(client)))
+	if (chan->invitOnlyChan() && chan->getAdmin() != client && !chan->is_oper(client))
 	{
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), chan->getName()));
 		return;

@@ -13,7 +13,7 @@ private:
 	Client		*_admin;
 
 	int 		_l; //max user in chan
-	int			_i = 0; //invite-only chan
+	bool		_i = 0; //invite-only chan
 	std::string _k; //chan's key(paasword)
 
 	std::vector<Client *> _clients;
@@ -44,7 +44,7 @@ public:
 	void						setAdmin(Client *client) { _admin = client; };
 	void						setPassword(std::string k) { _k = k; };
 	void						setMaxClients(int l) { _l = l; };
-	void						setInviteOnly(bool active) { active ? _i = 1 : _i = 0; };
+	void						setInviteOnly(bool active) { this->_i = active; };
 
 	// OTHER
 

@@ -10,5 +10,18 @@
 - [ ] commande password
 
 # Tests commandes approfondi:
-	- [ ] INVITE (manque la commande MODE pour tester si la condition InviteOnly fonctionne)
+	- [x] INVITE
 	- [ ] JOIN
+	- [ ] KICK
+	- [ ] LIST
+	- [x] MODE
+	- [ ] NICK
+	- [ ] NOTICE
+	- [ ] PART
+	- [ ] PASS
+	- [ ] PING
+	- [ ] PONG
+	- [ ] PRIVMSG
+	- [ ] QUIT
+	- [ ] USER
+	- [ ] WHO

@@ -6,14 +6,13 @@ ModeCommand::~ModeCommand() {}
 
 void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	int chanop = 0;
 	if (arguments.size() < 2 || arguments[0].empty() || arguments[1].empty()) {
 		return;
 	}
 
 	std::string target = arguments.at(0);
 
-	Channel *channel = _server->getChannel(target); //MODE on clients not implemented
+	Channel *channel = _server->getChannel(target);
 	if (!channel)
 	{
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), target));
@@ -21,11 +20,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
 	// check if admin or chanop
-	if (channel->getAdmin() == client)
-		chanop += 1;
-	if (channel->is_oper(client))
-		chanop += 1;
-	if (chanop == 0)
+	if (channel->getAdmin() != client && !channel->is_oper(client))
 	{
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickName(), target));
 		return;
@@ -43,15 +38,12 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 		switch (c) {
 
 			case 'i': {
-				std::cout << "invit\n";
 				channel->setInviteOnly(active);
-				std::cout << "channel->invitOnlyChan() = " << channel->invitOnlyChan() << std::endl;
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+i" : "-i"), ""));
 				break;
 			}
 
 			case 'l': {
-				std::cout << "maxClient\n";
 				channel->setMaxClients(active ? std::stol(arguments[p]) : 0);
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+l" : "-l"), (active ? arguments[p] : "")));
 				p += active ? 1 : 0;
@@ -59,7 +51,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			}
 
 			case 'k': {
-				std::cout << "PassWord\n";
 				channel->setPassword(active ? arguments[p] : "");
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+k" : "-k"), (active ? arguments[p] : "")));
 				p += active ? 1 : 0;
@@ -67,7 +58,6 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			}
 
 			case 'o': {
-				std::cout << "Oper\n";
 				Client *c_tar = channel->getClient(arguments[p]);
 				if (!c_tar)
 				{
