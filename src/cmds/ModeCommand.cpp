@@ -45,6 +45,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			case 'i': {
 				std::cout << "invit\n";
 				channel->setInviteOnly(active);
+				std::cout << "channel->invitOnlyChan() = " << channel->invitOnlyChan() << std::endl;
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+i" : "-i"), ""));
 				break;
 			}

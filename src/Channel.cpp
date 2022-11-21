@@ -108,8 +108,8 @@ void Channel::kick(Client *client, Client *target, std::string const &reason)
 
 void Channel::invit(Client *client, Client *target)
 {
-	std::cout << "Channel::invit\n";
-	broadcast(RPL_INVITING(client->getPrefix(), _name, target->getNickName()));
+	client->reply(RPL_INVITING(client->getNickName(), target->getNickName(), this->_name));
+	target->write(RPL_INVITE(client->getPrefix(), target->getNickName(), this->_name));
 	target->join(this);
 }
 

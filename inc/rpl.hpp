@@ -29,7 +29,7 @@
 
 #define RPL_NAMREPLY(source, channel, users)			"353 " + source + " = " + channel + " :" + users
 #define RPL_ENDOFNAMES(source, channel)					"366 " + source + " " + channel + " :End of /NAMES list."
-#define RPL_INVITING(source, channel, target)			"341 " + source + " INVIT " + channel + " " + target
+#define RPL_INVITING(source, channel, target)			"341 " + source + " " + channel + " " + target
 
 #define RPL_NOTOPIC(source, channel)					"331 " + source + " " + channel + " :No topic is set"
 #define RPL_TOPIC(source, channel, topic)				"332 " + source + " " + channel + " :" + topic
@@ -44,8 +44,9 @@
 
 #define RPL_MODE(source, channel, modes, args)		":" + source + " MODE " + channel + " " + modes + " " + args
 #define RPL_PING(source, token)						":" + source + " PONG :" + token
-#define RPL_QUIT(source, message)					":" + source + " QUIT :Quit: " + message
+#define RPL_QUIT(source, message)					":" + source + " QUIT :" + message
 #define RPL_JOIN(source, channel)					":" + source + " JOIN :" + channel
 #define RPL_PART(source, channel)					":" + source + " PART :" + channel
 #define RPL_KICK(source, channel, target, reason)	":" + source + " KICK " + channel + " " + target + " :" + reason
 #define RPL_PRIVMSG(source, target, message)		":" + source + " PRIVMSG " + target + " :" + message
+#define RPL_INVITE(source, target, channel)			":" + source + " INVITE " + target + " :" + channel
