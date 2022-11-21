@@ -57,8 +57,7 @@ public:
 	void						kick(Client *client, Client *target, std::string const &reason);
 	void						invit(Client *client, Client *target);
 	int 						is_oper(Client *client);
-
-	void						broadcast_channel(std::string const &message) const;
+	bool						isInChannel(Client *client);
 };
 
 #endif

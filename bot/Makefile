@@ -1,4 +1,4 @@
-NAME	=	ft_irc
+NAME	=	ftbot
 O		=	obj
 I		=	inc
 S		=	src
@@ -7,11 +7,11 @@ SRCS	=	$(wildcard $S/*.cpp) \
 INCS	=	$(wildcard $I/*.hpp)
 OBJS	=	$(SRCS:$S/%.cpp=$O/%.o)
 CC		=	clang++
-CFLAGS	=	-Wall -Werror -Wextra -g
+CFLAGS	=	-Wall -Werror -Wextra -std=c++98
 LDFLAGS	=
 
-DEBUG		=	0
 BUFFER_SIZE	=	4096
+DEBUG		=	0
 
 ERASE		=	\033[2K\r
 BLUE		=	\033[34m
