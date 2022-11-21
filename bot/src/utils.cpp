@@ -6,14 +6,16 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 14:09:53 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 14:53:58 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/21 10:07:29 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string.h>
-# include <string>
-# include <iostream>
-# include <vector>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+#include <stdlib.h>
 
 std::vector<std::string> split(std::string str, std::string delimiter)
 {
@@ -27,4 +29,16 @@ std::vector<std::string> split(std::string str, std::string delimiter)
 	}
 
 	return (result);
+}
+
+std::string intToString(int num)
+{
+	std::ostringstream ss;
+	ss << num;
+	return (ss.str());
+}
+
+int randInt(int min, int max)
+{
+	return (rand() % (max - min + 1) + min);
 }
