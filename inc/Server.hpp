@@ -73,13 +73,16 @@ public:
 	std::string&	getPassword() { return _password; };
 	std::string&	getServerName() { return _server_name; };
 	// Client
-	int				addClient(int const fd, std::string const ip, int const port);
-	int				delClient(int fd);
-	Client*			getClient(int fd);
-	Client*			getClient(const std::string &nickname);
+	std::vector<std::string>	getNickNames();
+	std::vector<Client *> 		getServClients() const { return _clients; };
+	int							addClient(int const fd, std::string const ip, int const port);
+	int							delClient(int fd);
+	Client*						getClient(int fd);
+	Client*						getClient(const std::string &nickname);
 	// Channel
-	Channel*		getChannel(std::string const &name);
-	Channel* 		createChannel(std::string const &name, std::string const &password, Client *client);
+	Channel*					getChannel(std::string const &name);
+	std::vector<Channel *>		getServChannels() const { return _channels; };
+	Channel* 					createChannel(std::string const &name, std::string const &password, Client *client);
 };
 
 #endif
