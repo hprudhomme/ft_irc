@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/21 14:04:54 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/21 15:28:06 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ Server::Server(int port):
 	_server_name(DEFAULT_SERVER_NAME),
 	_clients_fds(NULL)
 {
-	// TODO: check that port is ok, throw exception
+	
 }
 
 Server::Server(int port, std::string welcome_message):
@@ -36,8 +36,7 @@ Server::Server(int port, std::string welcome_message):
 	_server_name(DEFAULT_SERVER_NAME),
 	_clients_fds(NULL)
 {
-	// TODO: check that port is ok, throw exception
-	// If message doesn't end with a \n, add one
+
 }
 
 Server::~Server(void)

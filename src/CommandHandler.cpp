@@ -6,7 +6,6 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 	_commands["NICK"] = new NickCommand(_server, false);
 	_commands["USER"] = new UserCommand(_server, false);
 	_commands["QUIT"] = new QuitCommand(_server, false);
-
 	_commands["PING"] = new PingCommand(_server);
 	_commands["PONG"] = new PongCommand(_server);
 	_commands["JOIN"] = new JoinCommand(_server);
@@ -14,8 +13,6 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 	_commands["PART"] = new PartCommand(_server);
 	_commands["KICK"] = new KickCommand(_server);
 	_commands["INVITE"] = new InvitCommand(_server);
-
-	// TODO: implement
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
 	_commands["WHO"] = new WhoCommand(_server);
