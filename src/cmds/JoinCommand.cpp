@@ -7,7 +7,6 @@ JoinCommand::~JoinCommand() {}
 // format : JOIN <channel>{,<channel>} [<key>{,<key>}]
 void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	std::cout << "buzz join\n";
 	if (arguments.empty())
 	{
 		client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "JOIN"));
@@ -19,14 +18,10 @@ void JoinCommand::execute(Client *client, std::vector<std::string> arguments)
 
 	Channel *channel = _server->getChannel(name);
 	if (!channel)
-	{
-		std::cout << "create chan\n";
 		channel = _server->createChannel(name, password, client);
-	}
 
 	if (channel->invitOnlyChan())
 	{
-		std::cout << "invit only chan\n";
 		client->reply(ERR_INVITEONLYCHAN(client->getNickName(), channel->getName()));
 		return ;
 	}

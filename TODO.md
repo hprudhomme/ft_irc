@@ -5,8 +5,8 @@
 
 # Tests commandes approfondi:
 	- [x] INVITE
-	- [ ] JOIN
-	- [ ] KICK
+	- [x] JOIN
+	- [x] KICK
 	- [ ] LIST
 	- [x] MODE
 	- [ ] NICK

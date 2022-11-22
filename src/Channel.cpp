@@ -54,7 +54,6 @@ Client *Channel::getClient(const std::string &nickname)
 
 int Channel::is_oper(Client *client)
 {
-	std::cout << "is_oper ?\n";
 	std::vector<Client *> opers_chan = this->getChanOpers();
 	std::vector<Client *>:: iterator it_oper = opers_chan.begin();
 
@@ -72,7 +71,6 @@ int Channel::is_oper(Client *client)
 
 void Channel::removeClient(Client *client)
 {
-	std::cout << "Channel::removeClient\n";
 	std::string clientPrefix = client->getPrefix();
 
 	this->broadcast(RPL_PART(clientPrefix, this->getName()));
@@ -97,13 +95,11 @@ void Channel::removeClient(Client *client)
 
 void Channel::removeOper(Client *client)
 {
-	std::cout << "remove_oper`\n";
 	_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
 }
 
 void Channel::kick(Client *client, Client *target, std::string const &reason)
 {
-	std::cout << "Channel::kick\n";
 	broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
 	removeClient(target);
 }
