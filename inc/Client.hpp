@@ -24,6 +24,8 @@ class Client
 		std::string	_partial_recv;
 
 		Server	*_server;
+
+		unsigned long	_channelIndex(Channel *channel);
 	public:
 		Client(Server *server, int fd, std::string const &hostname, int port);
 		~Client();

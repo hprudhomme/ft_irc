@@ -13,13 +13,15 @@ private:
 	Client		*_admin;
 
 	int 		_l; //max user in chan
-	bool		_i = 0; //invite-only chan
+	bool		_i; //invite-only chan
 	std::string _k; //chan's key(paasword)
 
 	std::vector<Client *> _clients;
 	std::vector<Client *> _oper_clients;
 
 	Server *_server;
+
+	unsigned long	_clientIndex(std::vector<Client *> clients, Client *client);
 public:
 	Channel(std::string const &name, const std::string &password, Client *admin, Server *server);
 	~Channel();

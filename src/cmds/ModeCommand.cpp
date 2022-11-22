@@ -44,7 +44,7 @@ void ModeCommand::execute(Client *client, std::vector<std::string> arguments)
 			}
 
 			case 'l': {
-				channel->setMaxClients(active ? std::stol(arguments[p]) : 0);
+				channel->setMaxClients(active ? std::atoi(arguments[p].c_str()) : 0);
 				channel->broadcast(RPL_MODE(client->getPrefix(), channel->getName(), (active ? "+l" : "-l"), (active ? arguments[p] : "")));
 				p += active ? 1 : 0;
 				break;

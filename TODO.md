@@ -1,5 +1,7 @@
 - [ ] Récupérer le port d'écoute depuis les arguments commande
-- [ ] Tout n'est pas en cpp98
+- [x] Tout n'est pas en cpp98
+- [ ] Faire commande NAMES
+- [ ] Enlever les message de debug
 
 # Tests commandes approfondi:
 	- [x] INVITE

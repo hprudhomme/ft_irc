@@ -2,7 +2,7 @@
 #include "rpl.hpp"
 
 Channel::Channel(std::string const &name, std::string const &password, Client *admin, Server *server)
-					: _name(name) , _admin(admin), _l(1000), _k(password), _server(server) {}
+					: _name(name) , _admin(admin), _l(1000), _i(false), _k(password), _server(server) {}
 Channel::~Channel() {}
 
 std::vector<std::string>	Channel::getNickNames()
@@ -77,8 +77,10 @@ void Channel::removeClient(Client *client)
 
 	this->broadcast(RPL_PART(clientPrefix, this->getName()));
 
-	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
-	_clients.erase(std::remove(_clients.begin(), _clients.end(), client), _clients.end());
+	if (!_oper_clients.empty())
+		_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
+	if (!_clients.empty())
+		_clients.erase(this->_clients.begin() + this->_clientIndex(_clients, client));
 	client->leave(this, 1);
 
 	if (_clients.empty())
@@ -96,7 +98,7 @@ void Channel::removeClient(Client *client)
 void Channel::removeOper(Client *client)
 {
 	std::cout << "remove_oper`\n";
-	_oper_clients.erase(std::remove(_oper_clients.begin(), _oper_clients.end(), client), _oper_clients.end());
+	_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
 }
 
 void Channel::kick(Client *client, Client *target, std::string const &reason)
@@ -124,4 +126,19 @@ bool	Channel::isInChannel(Client *client)
 		it++;
 	}
 	return false;
+}
+
+unsigned long Channel::_clientIndex(std::vector<Client *> clients, Client *client)
+{
+	unsigned long i = 0;
+	std::vector<Client *>::iterator it = clients.begin();
+
+	while (it != clients.end())
+	{
+		if (*it == client)
+			return i;
+		it++;
+		i++;
+	}
+	return 0;
 }

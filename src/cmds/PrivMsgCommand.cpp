@@ -41,6 +41,8 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
             return;
         }
 
+		std::cout << "chan name: " << chan->getName() << std::endl;
+
 		// Channel *channel = client->getChannel();
 		// if (!channel) {
 		// 	client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), target));
@@ -50,7 +52,7 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
 		// if (channel->isNoExt()){
 		// 	std::vector<std::string>			nicknames(channel->getNicknames());
 		// 	std::vector<std::string>::iterator	i;
-			
+
 		// 	for (i = nicknames.begin(); i != nicknames.end(); i++)
 		// 		if (*i == client->getNickname())
 		// 			break;

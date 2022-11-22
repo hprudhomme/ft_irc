@@ -68,7 +68,9 @@ void	Client::join(Channel *chan)
 
 void 	Client::leave(Channel *chan, int kicked)
 {
-	_user_chans.erase(std::remove(_user_chans.begin(), _user_chans.end(), chan), _user_chans.end());
+	if (!_user_chans.empty())
+		_user_chans.erase(this->_user_chans.begin() + this->_channelIndex(chan));
+	std::cout << this->_user_chans.size() << std::endl;
 	//chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
 	if (!kicked)
 		chan->removeClient(this);
@@ -103,4 +105,19 @@ void	Client::welcome()
 	reply("372 " + this->getNickName() + " :- \"--^-----^-^^---'");
 
 	reply("376 " + this->getNickName() + " :End of MOTD command");
+}
+
+unsigned long	Client::_channelIndex(Channel *channel)
+{
+	unsigned long i = 0;
+	std::vector<Channel *>::iterator it = this->_user_chans.begin();
+
+	while (it != this->_user_chans.end())
+	{
+		if (*it == channel)
+			return i;
+		it++;
+		i++;
+	}
+	return 0;
 }

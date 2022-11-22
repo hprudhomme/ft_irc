@@ -3,7 +3,6 @@
 
 #include <string>
 #include <numeric>
-#include <regex>
 
 class Server;
 class Client;

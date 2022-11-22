@@ -7,7 +7,7 @@ SRCS	=	$(wildcard $S/*.cpp) \
 INCS	=	$(wildcard $I/*.hpp)
 OBJS	=	$(SRCS:$S/%.cpp=$O/%.o)
 CC		=	clang++
-CFLAGS	=	-Wall -Werror -Wextra -g
+CFLAGS	=	-Wall -Werror -Wextra -g -std=c++98
 LDFLAGS	=
 
 DEBUG		=	0
