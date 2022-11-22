@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:00:59 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/01 12:25:38 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/22 18:29:01 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,17 @@ std::vector<std::string> ft_split(const std::string& str, char c)
 		strs.push_back(part);
 	}
 	return strs;
+}
+
+std::string dateString(void)
+{
+	time_t rawtime;
+	struct tm *timeinfo;
+	char buffer[80];
+
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	strftime(buffer, sizeof(buffer), "%c", timeinfo);
+	return (buffer);
 }

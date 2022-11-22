@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/15 08:54:55 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/22 18:28:42 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,16 @@
 # include <string>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <ctime>
 # include <errno.h>
-# include <unistd.h>   //close
-# include <arpa/inet.h>    //close
+# include <unistd.h>
+# include <arpa/inet.h>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <sys/ioctl.h>
 # include <sys/poll.h>
 # include <netinet/in.h>
-# include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros
+# include <sys/time.h>
 
 # define DEFAULT_PORT 6667
 # define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
@@ -42,8 +43,8 @@ private:
 	std::string 			_password;
 	std::vector<Client *>	_clients;
 	std::vector<Channel *>	_channels;
-	std::string				_welcome_message;
 	std::string				_server_name; // TODO: le récupérer de l'utilisateur
+	std::string				_start_time;
 
 	int						_server_socket;
 	struct pollfd			*_clients_fds;
@@ -58,7 +59,6 @@ private:
 public:
 	Server(void);
 	Server(int port);
-	Server(int port, std::string welcome_message);
 	// Server(const Server &src);
 	~Server(void);
 	// Server &operator =(const Server &src);
@@ -72,6 +72,7 @@ public:
 	void			broadcastChannel(std::string message, int exclude_fd, Channel const *channel) const;
 	std::string&	getPassword() { return _password; };
 	std::string&	getServerName() { return _server_name; };
+	std::string&	getStartTime() { return _start_time; };
 	// Client
 	std::vector<std::string>	getNickNames();
 	std::vector<Client *> 		getServClients() const { return _clients; };

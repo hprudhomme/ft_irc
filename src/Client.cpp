@@ -82,11 +82,10 @@ void	Client::welcome()
 {
 	if (!this->isRegistered())
 		return ;
-	// TODO: la date doit être celle du démarrage du serv
 	// TODO: voir à quoi correspondent les usermodes et les chanmodes
 	reply(RPL_WELCOME(this->getNickName(), this->getPrefix()));
 	reply(RPL_YOURHOST(this->getNickName(), this->_server->getServerName(), "0.1"));
-	reply(RPL_CREATED(this->getNickName(), "Mon Nov 14 2022 at 16:51:49 CET"));
+	reply(RPL_CREATED(this->getNickName(), this->_server->getStartTime()));
 	reply(RPL_MYINFO(this->getNickName(), this->_server->getServerName(), "0.1", "aiorsw", "IObeiklmnopstv"));
 
 	// TODO: faire des fonction RPL

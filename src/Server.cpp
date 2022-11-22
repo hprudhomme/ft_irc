@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/21 15:28:06 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/22 18:28:38 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 Server::Server(void):
 	_port(DEFAULT_PORT),
-	_welcome_message(DEFAULT_WELCOME_MESSAGE),
 	_server_name(DEFAULT_SERVER_NAME),
+	_start_time(dateString()),
 	_clients_fds(NULL)
 {
 
@@ -23,17 +23,8 @@ Server::Server(void):
 
 Server::Server(int port):
 	_port(port),
-	_welcome_message(DEFAULT_WELCOME_MESSAGE),
 	_server_name(DEFAULT_SERVER_NAME),
-	_clients_fds(NULL)
-{
-	
-}
-
-Server::Server(int port, std::string welcome_message):
-	_port(port),
-	_welcome_message(welcome_message),
-	_server_name(DEFAULT_SERVER_NAME),
+	_start_time(dateString()),
 	_clients_fds(NULL)
 {
 
