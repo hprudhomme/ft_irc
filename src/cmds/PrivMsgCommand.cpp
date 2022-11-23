@@ -36,12 +36,9 @@ void PrivMsgCommand::execute(Client *client, std::vector<std::string> arguments)
         }
         if (it == client_chans.end())
         {
-            std::cout << "error 4\n";
             _server->broadcast(ERR_NOTONCHANNEL(client->getNickName(), target));
             return;
         }
-
-		std::cout << "chan name: " << chan->getName() << std::endl;
 
 		// Channel *channel = client->getChannel();
 		// if (!channel) {

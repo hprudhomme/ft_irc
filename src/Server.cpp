@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/22 18:28:38 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/23 11:03:35 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ void	Server::listen(void)
 		close(this->_server_socket);
 		return;
 	}
-
-	std::cout << address.sin6_addr.s6_addr << std::endl;
 
 	std::cout << "Starting ft_irc on port " << this->_port << std::endl;
 
@@ -221,10 +219,11 @@ int	Server::addClient(int socket, std::string ip, int port)
 	this->_clients.push_back(new Client(this, socket, ip, port));
 	this->_setNonBlocking(socket);
 	this->_constructFds();
-	std::cout << "* New connection {fd: " << socket
-		<< ", ip: " << ip
-		<< ", port: " << port
-		<< "}" << std::endl;
+	if (DEBUG)
+		std::cout << "* New connection {fd: " << socket
+			<< ", ip: " << ip
+			<< ", port: " << port
+			<< "}" << std::endl;
 	return this->_clients.size();
 }
 
@@ -234,10 +233,11 @@ int	Server::delClient(int socket)
 	{
 		if (this->_clients[client]->getFD() == socket)
 		{
-			std::cout << "* Closed connection {fd: " << this->_clients[client]->getFD()
-				<< ", ip: " << this->_clients[client]->getHostName()
-				<< ", port: " << this->_clients[client]->getPort()
-				<< "}" << std::endl;
+			if (DEBUG)
+				std::cout << "* Closed connection {fd: " << this->_clients[client]->getFD()
+					<< ", ip: " << this->_clients[client]->getHostName()
+					<< ", port: " << this->_clients[client]->getPort()
+					<< "}" << std::endl;
 
 			// Remove from channels
 			for (unsigned long chan = 0; chan < this->_channels.size(); chan++)

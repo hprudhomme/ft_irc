@@ -31,7 +31,6 @@ void	Client::reply(const std::string &reply) {
 
 void	Client::join(Channel *chan)
 {
-	std::cout << "client -> join" << this->getNickName() << std::endl;
 	chan->addClient(this);
 	_user_chans.push_back(chan);
 
@@ -70,7 +69,6 @@ void 	Client::leave(Channel *chan, int kicked)
 {
 	if (!_user_chans.empty())
 		_user_chans.erase(this->_user_chans.begin() + this->_channelIndex(chan));
-	std::cout << this->_user_chans.size() << std::endl;
 	//chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
 	if (!kicked)
 		chan->removeClient(this);

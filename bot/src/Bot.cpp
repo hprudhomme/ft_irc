@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:58:32 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/19 17:13:26 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/23 11:01:45 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,6 @@ bool Bot::send(std::string const &message)
 	if(sent_size != (ssize_t) message.length())
 	{
 		std::cout << "Error: The message has not been sent entirely." << std::endl;
-		std::cout << "sent_size: " << sent_size << std::endl;
 		return (false);
 	}
 	return (true);
