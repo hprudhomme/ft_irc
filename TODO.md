@@ -13,11 +13,11 @@
 	- [x] NOTICE
 	- [ ] PART
 	- [ ] PASS
-	- [ ] PING
-	- [ ] PONG
-	- [ ] PRIVMSG
+	- [x] PING
+	- [x] PONG
+	- [x] PRIVMSG
 	- [ ] QUIT
-	- [ ] USER
+	- [x] USER
 	- [ ] WHO
 
 # TODO bonus:
