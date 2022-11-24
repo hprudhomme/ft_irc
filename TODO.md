@@ -7,7 +7,7 @@
 	- [x] INVITE
 	- [x] JOIN
 	- [x] KICK
-	- [ ] LIST
+	- [x] LIST
 	- [x] MODE
 	- [ ] NICK
 	- [ ] NOTICE
@@ -19,3 +19,6 @@
 	- [ ] QUIT
 	- [ ] USER
 	- [ ] WHO
+
+# TODO bonus:
+	- [ ] JOIN qui prend une liste de chans (JOIN #test1,#test2)

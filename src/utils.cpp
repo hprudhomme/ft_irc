@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/21 17:00:59 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/22 18:29:01 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/24 15:57:29 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,11 @@ std::string dateString(void)
 
 	strftime(buffer, sizeof(buffer), "%c", timeinfo);
 	return (buffer);
+}
+
+std::string intToString(int num)
+{
+	std::ostringstream ss;
+	ss << num;
+	return (ss.str());
 }

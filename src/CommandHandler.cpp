@@ -16,7 +16,7 @@ CommandHandler::CommandHandler(Server *server) : _server(server)
 	_commands["PRIVMSG"] = new PrivMsgCommand(_server);
 	_commands["NOTICE"] = new NoticeCommand(_server);
 	_commands["WHO"] = new WhoCommand(_server);
-	_commands["LIST"] = new WhoCommand(_server);
+	_commands["LIST"] = new ListCommand(_server);
 }
 
 CommandHandler::~CommandHandler()
