@@ -25,7 +25,6 @@ bool	Client::isRegistered() const
 }
 
 void	Client::reply(const std::string &reply) {
-	// TODO: récupérer le nom du serveur
 	this->write(":" + this->_server->getServerName() + " " + reply);
 }
 
@@ -49,31 +48,14 @@ void	Client::join(Channel *chan)
 	reply(RPL_NOTOPIC(this->getNickName(), chan->getName()));
 	reply(RPL_NAMREPLY(this->getNickName(), chan->getName(), users));
 	reply(RPL_ENDOFNAMES(this->getNickName(), chan->getName()));
-
-
-	// std::vector<Channel *> client_chans = this->getUserChans();
-	// std::vector<Channel *>:: iterator it = client_chans.begin();
-
-	// Channel *chann;
-	// while (it != client_chans.end())
-	// {
-	// 	chann = it.operator*();
-	// 	if (chann->getName() == chan->getName())
-	// 		break ;
-	// 	++it;
-	// }
-	//chan->broadcast(RPL_JOIN(getPrefix(), chan->getName()), this);
 }
 
 void 	Client::leave(Channel *chan, int kicked)
 {
 	if (!_user_chans.empty())
 		_user_chans.erase(this->_user_chans.begin() + this->_channelIndex(chan));
-	//chan->broadcast(RPL_PART(getPrefix(), chan->getName()));
 	if (!kicked)
 		chan->removeClient(this);
-
-	// message leave chan
 }
 
 void	Client::welcome()

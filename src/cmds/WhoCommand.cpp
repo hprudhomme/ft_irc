@@ -6,38 +6,28 @@ WhoCommand::~WhoCommand() {}
 
 void WhoCommand::execute(Client *client, std::vector<std::string> arguments)
 {
-	// if (arguments.empty())
-	// {
-	// 	client->reply(ERR_NEEDMOREPARAMS(client->getNickName(), "WHO"));
-	// 	return;
-	// }
+	std::string channelName = "*";
 
-    if (arguments.empty())
+	if (arguments.empty())
 	{
-        std::string users;
-        std::vector<std::string> nicknames = _server->getNickNames();
-        for (std::vector<std::string>::iterator it = nicknames.begin(); it != nicknames.end(); it++)
-            users.append(*it + " ");
-
-        client->reply(RPL_WHOREPLY(client->getNickName(), users));
-        client->reply(RPL_ENDOFWHO(client->getNickName()));
-        return ;
+		std::vector<Client *> clients = _server->getServClients();
+		for (unsigned long i = 0; i < clients.size(); i++)
+			client->reply(RPL_WHOREPLY(client->getNickName(), channelName, clients[i]->getUserName(), clients[i]->getHostName(), this->_server->getServerName(), clients[i]->getNickName(), clients[i]->getRealName()));
 	}
-    else if (arguments.size() == 1)
-    {
-        if (arguments[0].at(0) == '#')
-        {
-            std::string users;
-            Channel *channel = _server->getChannel(arguments[0]);
-            std::vector<std::string> nicknames = channel->getNickNames();
-            for (std::vector<std::string>::iterator it = nicknames.begin(); it != nicknames.end(); it++)
-                users.append(*it + " ");
-
-            client->reply(RPL_WHOREPLY(client->getNickName(), users));
-            client->reply(RPL_ENDOFWHO(client->getNickName()));
-            return ;
-        }
-    }
-
-    return ;
+	else if (arguments.size() == 1)
+	{
+		if (arguments[0].at(0) == '#')
+		{
+			channelName = arguments[0];
+			Channel *channel = _server->getChannel(channelName);
+			if (channel)
+			{
+				std::vector<Client *> clients = channel->getChanClients();
+				for (unsigned long i = 0; i < clients.size(); i++)
+					client->reply(RPL_WHOREPLY(client->getNickName(), channelName, clients[i]->getUserName(), clients[i]->getHostName(), this->_server->getServerName(), clients[i]->getNickName(), clients[i]->getRealName()));
+			}
+		}
+	}
+	client->reply(RPL_ENDOFWHO(client->getNickName(), channelName));
+	return ;
 }

@@ -34,11 +34,11 @@
 #define RPL_NOTOPIC(source, channel)					"331 " + source + " " + channel + " :No topic is set"
 #define RPL_TOPIC(source, channel, topic)				"332 " + source + " " + channel + " :" + topic
 
-#define RPL_WHOREPLY(source, users)						"352 " + source + " :" + users
-#define RPL_ENDOFWHO(source)							"315 " + source + " :End of WHO list"
+#define RPL_WHOREPLY(source, channel, username, hostname, serverhostname, nickname, realname)	"352 " + source + " " + channel + " " + username + " " + hostname + " " + serverhostname + " " + nickname + " H :0 " + realname
+#define RPL_ENDOFWHO(source, channel)					"315 " + source + " " + channel + " :End of WHO list"
 
-#define RPL_LIST(source, channel, nbUsers, topic)		"322 "  + source + " " + channel + " " + nbUsers + " :" + topic
-#define RPL_LISTEND(source)								"323 "  + source + " :End of LIST"
+#define RPL_LIST(source, channel, nbUsers, topic)		"322 " + source + " " + channel + " " + nbUsers + " :" + topic
+#define RPL_LISTEND(source)					"323 " + source + " :End of LIST"
 
 // COMMAND REPLIES
 

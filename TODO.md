@@ -11,14 +11,14 @@
 	- [x] MODE
 	- [x] NICK
 	- [x] NOTICE
-	- [ ] PART
+	- [x] PART
 	- [ ] PASS
 	- [x] PING
 	- [x] PONG
 	- [x] PRIVMSG
-	- [ ] QUIT
+	- [x] QUIT
 	- [x] USER
-	- [ ] WHO
+	- [x] WHO
 
 # TODO bonus:
 	- [ ] JOIN qui prend une liste de chans (JOIN #test1,#test2)

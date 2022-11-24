@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/24 15:46:36 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/24 17:18:11 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,7 +216,11 @@ void	Server::broadcast(std::string message, int exclude_fd) const
 
 int	Server::addClient(int socket, std::string ip, int port)
 {
-	this->_clients.push_back(new Client(this, socket, ip, port));
+	std::string newip = ip;
+	if (newip.find("::ffff:") != std::string::npos)
+		newip = newip.substr(7);
+		
+	this->_clients.push_back(new Client(this, socket, newip, port));
 	this->_setNonBlocking(socket);
 	this->_constructFds();
 	if (DEBUG)
