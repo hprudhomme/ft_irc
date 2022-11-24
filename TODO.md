@@ -10,7 +10,7 @@
 	- [x] LIST
 	- [x] MODE
 	- [x] NICK
-	- [ ] NOTICE
+	- [x] NOTICE
 	- [ ] PART
 	- [ ] PASS
 	- [ ] PING

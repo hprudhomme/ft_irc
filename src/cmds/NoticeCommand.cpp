@@ -7,7 +7,7 @@ NoticeCommand::~NoticeCommand() {};
 void NoticeCommand::execute(Client *client, std::vector<std::string> arguments) {
 
 	if (arguments.size() < 2 || arguments[0].empty() || arguments[1].empty()) {
-		//client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "NOTICE"));
+		// ERR_NEEDMOREPARAMS
 		return;
 	}
 
@@ -21,34 +21,34 @@ void NoticeCommand::execute(Client *client, std::vector<std::string> arguments) 
 	message = message.at(0) == ':' ? message.substr(1) : message;
 
 	if (target.at(0) == '#')
-    {
-        std::vector<Channel *> client_chans = client->getUserChans();
-        std::vector<Channel *>:: iterator it = client_chans.begin();
+	{
+		std::vector<Channel *> client_chans = client->getUserChans();
+		std::vector<Channel *>:: iterator it = client_chans.begin();
 
-        Channel *chan;
+		Channel *chan;
 		std::string chan_name;
-        while (it != client_chans.end())
-        {
-            chan = it.operator*();
-            if (chan->getName() == target)
-                break ;
-            ++it;
-        }
-        if (it == client_chans.end())
-        {
-            // client->reply(ERR_NOTONCHANNEL(client->getNickName(), chan->getName()));
-            return;
-        }
+		while (it != client_chans.end())
+		{
+			chan = it.operator*();
+			if (chan->getName() == target)
+				break ;
+			++it;
+		}
+		if (it == client_chans.end())
+		{
+			// ERR_NOTONCHANNEL
+			return;
+		}
 
-		//chan->broadcast(RPL_NOTICE(client->getPrefix(), target, message), client);
+		chan->broadcast(RPL_NOTICE(client->getPrefix(), target, message), client);
 		return;
 	}
 
 	Client *dest = _server->getClient(target);
 	if (!dest)
-    {
-		//client->reply(ERR_NOSUCHNICK(client->getNickname(), target));
+	{
+		// ERR_NOSUCHNICK
 		return;
 	}
-	//dest->write(RPL_NOTICE(client->getPrefix(), target, message));
+	dest->write(RPL_NOTICE(client->getPrefix(), target, message));
 }
