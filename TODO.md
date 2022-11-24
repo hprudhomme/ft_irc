@@ -9,7 +9,7 @@
 	- [x] KICK
 	- [x] LIST
 	- [x] MODE
-	- [ ] NICK
+	- [x] NICK
 	- [ ] NOTICE
 	- [ ] PART
 	- [ ] PASS

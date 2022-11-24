@@ -10,7 +10,6 @@ class Server;
 class Client
 {
 	private:
-		int 		_is_registered;
 		int			_fd;
 		std::string _hostname;
 		int 		_port;
@@ -46,7 +45,6 @@ class Client
 
 		// SETTERS
 
-		void 					setRegistered(int i) { _is_registered = i ;};
 		void 					setNickname(const std::string &nickname) { _nickname = nickname; };
 		void 					setUsername(const std::string &username) { _username = username; };
 		void 					setRealName(const std::string &realname) { _realname = realname; };

@@ -2,7 +2,7 @@
 #include "rpl.hpp"
 
 Client::Client(Server *server, int fd, std::string const &hostname, int port)
-					: _is_registered(0), _fd(fd), _hostname(hostname), _port(port), _server(server) {}
+					: _fd(fd), _hostname(hostname), _port(port), _server(server) {}
 Client::~Client() {}
 
 void	Client::write(const std::string &message) const
