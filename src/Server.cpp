@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/24 17:18:11 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 11:20:32 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,12 @@ int	Server::addClient(int socket, std::string ip, int port)
 	std::string newip = ip;
 	if (newip.find("::ffff:") != std::string::npos)
 		newip = newip.substr(7);
-		
+	else if (newip.find("::") != std::string::npos)
+		newip = newip.substr(2);
+
+	if (newip.empty())
+		newip = "127.0.0.1";
+
 	this->_clients.push_back(new Client(this, socket, newip, port));
 	this->_setNonBlocking(socket);
 	this->_constructFds();
