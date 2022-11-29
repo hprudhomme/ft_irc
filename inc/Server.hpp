@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/22 18:28:42 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 11:37:09 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@
 # include <sys/time.h>
 
 # define DEFAULT_PORT 6667
-# define DEFAULT_WELCOME_MESSAGE "ft_irc, by ocartier and hprudhom\n"
 # define DEFAULT_SERVER_NAME "irc.42.fr"
 
 class Client;
@@ -43,7 +42,7 @@ private:
 	std::string 			_password;
 	std::vector<Client *>	_clients;
 	std::vector<Channel *>	_channels;
-	std::string				_server_name; // TODO: le récupérer de l'utilisateur
+	std::string				_server_name;
 	std::string				_start_time;
 
 	int						_server_socket;
@@ -57,8 +56,7 @@ private:
 	void					_handleMessage(std::string const message, Client *client);
 
 public:
-	Server(void);
-	Server(int port);
+	Server(int port, std::string const &password);
 	// Server(const Server &src);
 	~Server(void);
 	// Server &operator =(const Server &src);

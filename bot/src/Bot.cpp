@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:58:32 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/23 11:01:45 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:49:12 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 Bot::Bot(
 	std::string const &server_address,
 	int server_port,
+	std::string const &password,
 	std::string const &nickname,
 	std::string const &username,
 	std::string const &realname,
@@ -29,6 +30,7 @@ Bot::Bot(
 ):
 	_server_address(server_address),
 	_server_port(server_port),
+	_password(password),
 	_nickname(nickname),
 	_username(username),
 	_realname(realname),
@@ -54,14 +56,17 @@ bool Bot::connect(void)
 	if (::connect(this->_server_socket, (sockaddr*)&hint, (socklen_t)(sizeof(hint))) != 0)
 		return (false);
 
-	if (!this->auth(true, true, true))
+	if (!this->auth(true, true, true, true))
 		return (!this->disconnect());
 
 	return (true);
 }
 
-bool Bot::auth(bool sendNick, bool sendUser, bool sendJoin)
+bool Bot::auth(bool sendPass, bool sendNick, bool sendUser, bool sendJoin)
 {
+	if (sendPass)
+		if (!this->send("PASS " + this->_password + "\r\n"))
+			return (!this->disconnect());
 	if (sendNick)
 		if (!this->send("NICK " + this->_nickname + "\r\n"))
 			return (!this->disconnect());
@@ -114,7 +119,12 @@ bool Bot::listen(std::string (*getAnswer)(std::string message, std::string sende
 			{
 				this->_nickname += "_";
 				std::cout << "Nickname taken, trying with " << this->_nickname << std::endl;
-				this->auth(true, false, true);
+				this->auth(false, true, false, true);
+			}
+			else if (splitted[1] == "464")
+			{
+				std::cout << "Wrong password" << std::endl;
+				return (false);
 			}
 			else if (splitted[1] == "451")
 				std::cout << "Not registered, retrying" << std::endl;

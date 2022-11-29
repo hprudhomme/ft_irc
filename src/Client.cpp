@@ -2,7 +2,7 @@
 #include "rpl.hpp"
 
 Client::Client(Server *server, int fd, std::string const &hostname, int port)
-					: _fd(fd), _hostname(hostname), _port(port), _server(server) {}
+					: _fd(fd), _hostname(hostname), _port(port), _correct_password(false), _server(server){}
 Client::~Client() {}
 
 void	Client::write(const std::string &message) const
@@ -19,7 +19,7 @@ std::string Client::getPrefix() const
 
 bool	Client::isRegistered() const
 {
-	if (!this->getNickName().empty() && !this->getUserName().empty() && !this->getRealName().empty())
+	if (!this->getNickName().empty() && !this->getUserName().empty() && !this->getRealName().empty() && this->_correct_password)
 		return (true);
 	return (false);
 }

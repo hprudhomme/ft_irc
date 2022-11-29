@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 14:09:53 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/21 10:07:29 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:54:27 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,9 @@ std::string intToString(int num)
 int randInt(int min, int max)
 {
 	return (rand() % (max - min + 1) + min);
+}
+
+bool containsOnlyDigits(const std::string &str)
+{
+	return str.find_first_not_of("0123456789") == std::string::npos;
 }

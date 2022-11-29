@@ -13,6 +13,7 @@ class Client
 		int			_fd;
 		std::string _hostname;
 		int 		_port;
+		bool		_correct_password;
 
 		std::string _nickname;
 		std::string _username;
@@ -49,6 +50,7 @@ class Client
 		void 					setUsername(const std::string &username) { _username = username; };
 		void 					setRealName(const std::string &realname) { _realname = realname; };
 		void 					setPartialRecv(const std::string &partial_recv) { _partial_recv = partial_recv; };
+		void					setCorrectPassword(bool correct_password) { _correct_password = correct_password; };
 
 		// OTHER
 

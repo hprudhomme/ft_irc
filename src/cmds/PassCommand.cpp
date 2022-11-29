@@ -23,4 +23,6 @@ void PassCommand::execute(Client *client, std::vector<std::string> arguments) {
 		client->reply(ERR_PASSWDMISMATCH(client->getNickName()));
 		return;
 	}
+
+	client->setCorrectPassword(true);
 }

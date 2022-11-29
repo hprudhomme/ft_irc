@@ -1,4 +1,4 @@
-NAME	=	ft_irc
+NAME	=	ircserv
 O		=	obj
 I		=	inc
 S		=	src

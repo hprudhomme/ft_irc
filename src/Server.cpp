@@ -6,23 +6,15 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/29 11:20:32 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:09:14 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_irc.hpp"
 
-Server::Server(void):
-	_port(DEFAULT_PORT),
-	_server_name(DEFAULT_SERVER_NAME),
-	_start_time(dateString()),
-	_clients_fds(NULL)
-{
-
-}
-
-Server::Server(int port):
+Server::Server(int port, std::string const &password) :
 	_port(port),
+	_password(password),
 	_server_name(DEFAULT_SERVER_NAME),
 	_start_time(dateString()),
 	_clients_fds(NULL)
@@ -71,7 +63,7 @@ void	Server::listen(void)
 		return;
 	}
 
-	std::cout << "Starting ft_irc on port " << this->_port << std::endl;
+	std::cout << "Starting ircserv on port " << this->_port << std::endl;
 
 	// listen
 	if (::listen(this->_server_socket, 32) < 0)
@@ -222,7 +214,7 @@ int	Server::addClient(int socket, std::string ip, int port)
 	else if (newip.find("::") != std::string::npos)
 		newip = newip.substr(2);
 
-	if (newip.empty())
+	if (newip.empty() || newip == "1")
 		newip = "127.0.0.1";
 
 	this->_clients.push_back(new Client(this, socket, newip, port));

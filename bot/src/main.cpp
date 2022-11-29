@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 14:12:52 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/21 13:49:31 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/11/29 14:56:15 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,19 @@ std::string getAnswer(std::string message, std::string sender)
 	return ("");
 }
 
-int main()
+int main(int argc, char **argv)
 {
+	if (argc !=	4)
+	{
+		std::cout << "Usage: " << argv[0] << " <host> <port> <password>" << std::endl;
+		return (1);
+	}
+	else if (!containsOnlyDigits(argv[2]))
+	{
+		std::cout << "Port must be a number" << std::endl;
+		return (1);
+	}
+
 	srand(time(0));
 	// Init jokes
 	jokes.push_back("Why does C get all the girls, and Java gets none? Because C doesn't treat them as objects.");
@@ -54,7 +65,10 @@ int main()
 	jokes.push_back("Java and C are telling jokes to each other. C writes something on the blackboard, and asks Java: Do you get the reference? Java didn't.");
 	jokes.push_back("C programmers never die. They are just <cast> into VOID.");
 
-	Bot bot("127.0.0.1", 6667, "ircbot", "ircbot", "IRC Bot", "#bot");
+	std::string host = argv[1];
+	if (host == "localhost")
+		host = "127.0.0.1";
+	Bot bot(host, atoi(argv[2]), argv[3], "ircbot", "ircbot", "IRC Bot", "#bot");
 
 	if (!bot.connect())
 	{
