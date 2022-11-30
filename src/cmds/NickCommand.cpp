@@ -4,11 +4,11 @@ NickCommand::NickCommand(Server *server, bool auth) : Command(server, auth) {}
 
 NickCommand::~NickCommand() {}
 
-void NickCommand::execute(Client *client, std::vector<std::string> arguments) {
-
+void NickCommand::execute(Client *client, std::vector<std::string> arguments)
+{
 	if (arguments.empty() || arguments[0].empty())
 	{
-		client->reply(ERR_NONICKNAMEGIVEN(client->getNickName()));
+		client->reply(ERR_NONICKNAMEGIVEN(client->getPrefix()));
 		return;
 	}
 
