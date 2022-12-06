@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/12/06 16:43:10 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/12/06 21:15:57 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,12 @@ Server::~Server(void)
 		delete this->_clients[i];
 	for (unsigned long i = 0; i < this->_channels.size(); i++)
 		delete this->_channels[i];
-	delete this->_clients_fds;
+	delete [] this->_clients_fds;
 }
 
 void	Server::listen(void)
 {
 	struct sockaddr_in6 address;
-	int opt = 1;
 
 	//create a master socket
 	this->_server_socket = socket(AF_INET6, SOCK_STREAM , IPPROTO_TCP);
@@ -46,6 +45,7 @@ void	Server::listen(void)
 	}
 
 	//set master socket to allow multiple connections
+	int opt = 1;
 	if(setsockopt(this->_server_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0)
 	{
 		std::cout << "Error: Can't set socket options." << std::endl;
@@ -59,7 +59,8 @@ void	Server::listen(void)
 	address.sin6_family = AF_INET6;
 	address.sin6_addr = in6addr_any;
 	address.sin6_port = htons(this->_port);
-
+	address.sin6_flowinfo = 0;
+	address.sin6_scope_id = 0;
 
 	if (bind(this->_server_socket, (struct sockaddr *)&address, sizeof(address))<0)
 	{
@@ -114,7 +115,7 @@ void	Server::_acceptConnection(void)
 
 	do {
 		struct sockaddr_in6 address;
-		int addrlen;
+		socklen_t addrlen = sizeof(address);
 
 		socket = accept(this->_server_socket, (struct sockaddr*)&address, (socklen_t*)&addrlen);
 		if (socket < 0)
@@ -289,7 +290,7 @@ Client *Server::getClient(const std::string &nickname)
 void	Server::_constructFds(void)
 {
 	if (this->_clients_fds)
-		delete this->_clients_fds;
+		delete [] this->_clients_fds;
 	this->_clients_fds = new struct pollfd[this->_clients.size() + 1];
 
 	this->_clients_fds[0].fd = this->_server_socket;
