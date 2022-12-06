@@ -14,9 +14,21 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 	}
 
 	std::string name = arguments[0];
+	std::string reason = "";
+
+	// Assemble reason
+	if (arguments.size() >= 2)
+		for (std::vector<std::string>::iterator it = arguments.begin() + 1; it != arguments.end(); it++)
+			reason.append(*it + " ");
+	// remove first :
+	if (reason[0] == ':')
+		reason = reason.substr(1, reason.size());
+	// remove last space
+	if (reason[reason.size() - 1] == ' ')
+		reason = reason.substr(0, reason.size() - 1);
 
 	Channel *channel = _server->getChannel(name);
-	if (!channel) 
+	if (!channel)
 	{
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickName(), name));
 		return;
@@ -39,5 +51,5 @@ void PartCommand::execute(Client *client, std::vector<std::string> arguments) {
 	 	return;
 	}
 
-	client->leave(chan, 0);
+	client->leave(chan, 0, reason);
 }

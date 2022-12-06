@@ -69,17 +69,21 @@ int Channel::is_oper(Client *client)
 	return 0;
 }
 
-void Channel::removeClient(Client *client)
+void Channel::removeClient(Client *client, std::string reason)
 {
 	std::string clientPrefix = client->getPrefix();
 
-	this->broadcast(RPL_PART(clientPrefix, this->getName()));
+	if (reason.empty())
+		this->broadcast(RPL_PART(clientPrefix, this->getName()));
+	else
+		this->broadcast(RPL_PART_REASON(clientPrefix, this->getName(), reason));
+	reason.clear();
 
 	if (!_oper_clients.empty())
 		_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
 	if (!_clients.empty())
 		_clients.erase(this->_clients.begin() + this->_clientIndex(_clients, client));
-	client->leave(this, 1);
+	client->leave(this, 1, reason);
 
 	if (_clients.empty())
 	{
@@ -98,10 +102,11 @@ void Channel::removeOper(Client *client)
 	_oper_clients.erase(this->_oper_clients.begin() + this->_clientIndex(_oper_clients, client));
 }
 
-void Channel::kick(Client *client, Client *target, std::string const &reason)
+void Channel::kick(Client *client, Client *target, std::string reason)
 {
 	broadcast(RPL_KICK(client->getPrefix(), _name, target->getNickName(), reason));
-	removeClient(target);
+	reason.clear();
+	removeClient(target, reason);
 }
 
 void Channel::invit(Client *client, Client *target)

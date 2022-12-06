@@ -50,19 +50,18 @@ void	Client::join(Channel *chan)
 	reply(RPL_ENDOFNAMES(this->getNickName(), chan->getName()));
 }
 
-void 	Client::leave(Channel *chan, int kicked)
+void 	Client::leave(Channel *chan, int kicked, std::string &reason)
 {
 	if (!_user_chans.empty())
 		_user_chans.erase(this->_user_chans.begin() + this->_channelIndex(chan));
 	if (!kicked)
-		chan->removeClient(this);
+		chan->removeClient(this, reason);
 }
 
 void	Client::welcome()
 {
 	if (!this->isRegistered())
 		return ;
-	// TODO: voir à quoi correspondent les usermodes et les chanmodes
 	reply(RPL_WELCOME(this->getNickName(), this->getPrefix()));
 	reply(RPL_YOURHOST(this->getNickName(), this->_server->getServerName(), "0.1"));
 	reply(RPL_CREATED(this->getNickName(), this->_server->getStartTime()));

@@ -25,4 +25,5 @@ void PassCommand::execute(Client *client, std::vector<std::string> arguments)
 	}
 
 	client->setCorrectPassword(true);
+	client->welcome();
 }

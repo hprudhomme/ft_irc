@@ -61,7 +61,7 @@ void CommandHandler::invoke(Client *client, const std::string &message)
 		}
 		catch (const std::out_of_range &e)
 		{
-			// if (name != "CAP")
+			if (name != "CAP")
 				client->reply(ERR_UNKNOWNCOMMAND(client->getNickName(), name));
 		}
 	}

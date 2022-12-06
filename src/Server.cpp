@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:01 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/29 12:09:14 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/12/06 16:43:10 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,19 @@ Server::Server(int port, std::string const &password) :
 	_password(password),
 	_server_name(DEFAULT_SERVER_NAME),
 	_start_time(dateString()),
-	_clients_fds(NULL)
+	_clients_fds(NULL),
+	_handler(CommandHandler(this))
 {
 
 }
 
 Server::~Server(void)
 {
-
+	for (unsigned long i = 0; i < this->_clients.size(); i++)
+		delete this->_clients[i];
+	for (unsigned long i = 0; i < this->_channels.size(); i++)
+		delete this->_channels[i];
+	delete this->_clients_fds;
 }
 
 void	Server::listen(void)
@@ -230,6 +235,8 @@ int	Server::addClient(int socket, std::string ip, int port)
 
 int	Server::delClient(int socket)
 {
+	std::string emptyString = "";
+
 	for (unsigned long client = 0; client < this->_clients.size(); client++)
 	{
 		if (this->_clients[client]->getFD() == socket)
@@ -244,7 +251,7 @@ int	Server::delClient(int socket)
 			for (unsigned long chan = 0; chan < this->_channels.size(); chan++)
 			{
 				if (this->_channels[chan]->isInChannel(this->_clients[client]))
-					this->_channels[chan]->removeClient(this->_clients[client]);
+					this->_channels[chan]->removeClient(this->_clients[client], emptyString);
 			}
 
 			this->_clients.erase(this->_clients.begin() + client);
@@ -336,8 +343,8 @@ void	Server::_handleMessage(std::string const message, Client *client)
 	if (DEBUG)
 		std::cout << "recv(" << client->getFD() << "): " << message << std::endl;
 
-	CommandHandler	*handler = new CommandHandler(this);
-	handler->invoke(client, message);
+
+	this->_handler.invoke(client, message);
 }
 
 std::vector<std::string>	Server::getNickNames()

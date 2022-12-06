@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/20 13:40:09 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/29 11:37:09 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/12/06 16:15:43 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # include <netinet/in.h>
 # include <sys/time.h>
 
+# include "CommandHandler.hpp"
+
 # define DEFAULT_PORT 6667
 # define DEFAULT_SERVER_NAME "irc.42.fr"
 
@@ -47,6 +49,8 @@ private:
 
 	int						_server_socket;
 	struct pollfd			*_clients_fds;
+	CommandHandler			_handler;
+
 
 	void					_waitActivity(void);
 	void					_constructFds(void);
