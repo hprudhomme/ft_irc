@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 13:58:32 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/29 12:49:12 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/12/08 14:19:31 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ bool Bot::listen(std::string (*getAnswer)(std::string message, std::string sende
 		}
 		else
 		{
-			std::vector<std::string> splitted = split(buff, " ");
+			std::vector<std::string> splitted = split(buff, ' ');
 			if (splitted[1] == "376")
 				std::cout << "Connected to " << this->_server_address << ":" << this->_server_port << std::endl;
 			else if (splitted[1] == "433")
@@ -160,7 +160,7 @@ bool Bot::_isPrivateMessage(std::vector<std::string> splitted)
 
 std::string Bot::_getMessage(std::string str)
 {
-	std::vector<std::string> splitted = split(str, " ");
+	std::vector<std::string> splitted = split(str, ' ');
 	if (!this->_isPrivateMessage(splitted))
 		return ("");
 
@@ -191,7 +191,7 @@ std::string Bot::_extractSender(std::string str)
 
 std::string Bot::_extractChannel(std::string message)
 {
-	std::vector<std::string> splitted = split(message, " ");
+	std::vector<std::string> splitted = split(message, ' ');
 	if (!this->_isPrivateMessage(splitted))
 		return ("");
 

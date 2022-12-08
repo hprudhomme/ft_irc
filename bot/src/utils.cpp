@@ -6,7 +6,7 @@
 /*   By: ocartier <ocartier@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 14:09:53 by ocartier          #+#    #+#             */
-/*   Updated: 2022/11/29 14:54:27 by ocartier         ###   ########.fr       */
+/*   Updated: 2022/12/08 14:18:48 by ocartier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,15 @@
 #include <sstream>
 #include <stdlib.h>
 
-std::vector<std::string> split(std::string str, std::string delimiter)
+std::vector<std::string> split(std::string str, char delimiter)
 {
-	std::vector<std::string> result;
+	std::stringstream ss(str);
+	std::vector<std::string> tokens;
 
-	char *ptr = strtok(strdup(str.c_str()), delimiter.c_str());
-	while (ptr != NULL)
-	{
-		result.push_back(ptr);
-		ptr = strtok(NULL, delimiter.c_str());
-	}
-
-	return (result);
+	std::string token;
+	while (std::getline(ss, token, delimiter))
+		tokens.push_back(token);
+	return tokens;
 }
 
 std::string intToString(int num)
